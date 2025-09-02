@@ -12,7 +12,8 @@
 <style>
   :root{
     --bg:#0b0f16; --ink:#e7ecf5; --muted:#94a3b8; --primary:#4c8bf5; --accent:#8b5cf6;
-    --card:#0f1520; --border:#1f2734; --radius:16px; --glow: 0 10px 40px rgba(76,139,245,.25);
+    --card:#0f1520; --border:#1f2734; --radius:12px; --glow: 0 10px 40px rgba(76,139,245,.25);
+    --shadow: 0 4px 12px rgba(0,0,0,.25);
   }
   *{box-sizing:border-box}
   html,body{height:100%}
@@ -56,11 +57,12 @@
   .hero p{margin:0;color:var(--muted)}
   .cta{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
   .btn{
-    appearance:none;border:1px solid var(--border);background:#0d1420;color:var(--ink);
-    padding:10px 14px;border-radius:12px;font-weight:700;cursor:pointer
+    appearance:none;border:1px solid var(--border);background:#0d1420;color:var(--ink);text-decoration:none;
+    padding:12px 20px;border-radius:var(--radius);font-weight:600;cursor:pointer;display:inline-block;
+    transition: all 0.2s ease;box-shadow:var(--shadow);
   }
-  .btn.primary{background:var(--primary);border-color:transparent;color:#fff;box-shadow:0 6px 18px rgba(76,139,245,.35)}
-  .btn:hover{opacity:.96;transform:translateY(-1px)}
+  .btn.primary{background:var(--primary);border-color:transparent;color:#fff;box-shadow:var(--glow)}
+  .btn:hover{opacity:.95;transform:translateY(-1px);box-shadow: 0 6px 20px rgba(0,0,0,.3)}
   .features{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-top:10px}
   .chip{
     border:1px solid var(--border);border-radius:12px;padding:10px 12px;background:#0b1220;color:var(--muted);
@@ -108,9 +110,6 @@
 </div>
 
 <script>
-  // Gentle auto-open after short delay (keeps pretty landing visible briefly)
-  setTimeout(()=>{ window.location.href = "./apps/web/"; }, 900);
-
   // Minimal PWA install affordance if supported
   let deferred;
   window.addEventListener('beforeinstallprompt', (e)=>{
@@ -121,6 +120,16 @@
       btn.disabled = true;
       deferred.prompt(); await deferred.userChoice; deferred = null;
     };
+  });
+
+  // Add smooth interactions
+  document.querySelectorAll('.btn').forEach(btn => {
+    btn.addEventListener('mouseenter', () => {
+      btn.style.transform = 'translateY(-2px)';
+    });
+    btn.addEventListener('mouseleave', () => {
+      btn.style.transform = 'translateY(0)';
+    });
   });
 </script>
 </body>
