@@ -1,11 +1,20 @@
 <!doctype html>
 <html lang="en">
-  <meta charset="utf-8">
-  <title>Not Found – Scenestealer</title>
-  <meta http-equiv="refresh" content="0; url=./apps/web/">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <body>
-    <p>Page moved. Going to <a href="./apps/web/">/apps/web/</a>…</p>
-    <script>location.replace("./apps/web/");</script>
-  </body>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Not found · Scenestealer</title>
+<style>
+  body{margin:0;height:100vh;display:grid;place-items:center;background:#0b0f16;color:#e7ecf5;font:15px/1.6 ui-sans-serif,system-ui}
+  .box{border:1px solid #1f2734;background:#0f1520;border-radius:14px;padding:20px 22px;text-align:center;max-width:480px}
+  a{color:#4c8bf5;text-decoration:none;font-weight:700}
+  a:hover{opacity:.9}
+</style>
+<body>
+  <div class="box">
+    <h2 style="margin:0 0 6px 0">Page moved</h2>
+    <p>Taking you to the app… If it doesn't move, tap below.</p>
+    <p><a href="./apps/web/">Open Scenestealer</a></p>
+  </div>
+<script>setTimeout(()=>location.replace("./apps/web/"), 600);</script>
+</body>
 </html>
