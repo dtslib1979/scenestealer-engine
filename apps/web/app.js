@@ -110,6 +110,15 @@ $('#loadPreset').addEventListener('click', async ()=>{
   const res = await fetch(`./presets/${name}.json`)
   const json = await res.json()
   state.tokens = json.tokens || state.tokens
+  
+  // Update UI inputs to reflect loaded preset
+  $('#colorPrimary').value = state.tokens.colors.primary
+  $('#colorBg').value = state.tokens.colors.bg
+  $('#colorFg').value = state.tokens.colors.fg
+  $('#colorAccent').value = state.tokens.colors.accent
+  $('#radius').value = state.tokens.radii
+  $('#shadow').value = state.tokens.shadow
+  
   applyTokens()
 })
 $('#applyTheme').addEventListener('click', ()=>{
