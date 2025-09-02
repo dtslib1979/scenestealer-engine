@@ -6,6 +6,7 @@
 <title>Scenestealer Engine</title>
 <meta name="description" content="Preset → tokens → sections → pro finish → export. Build aesthetic UIs fast." />
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><circle cx='32' cy='32' r='30' fill='%234c8bf5'/><path d='M18 40c8 4 20 4 28 0-2 6-8 10-14 10s-12-4-14-10Z' fill='white'/><circle cx='26' cy='26' r='4' fill='white'/><circle cx='38' cy='26' r='4' fill='white'/></svg>">
+<link rel="manifest" href="./apps/web/manifest.webmanifest">
 <meta property="og:title" content="Scenestealer Engine" />
 <meta property="og:description" content="Extract the vibe. Assemble the site. Finish like a pro." />
 <meta property="og:type" content="website" />
@@ -110,6 +111,15 @@
 </div>
 
 <script>
+  // Register service worker for PWA functionality
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./apps/web/sw.js', { scope: './apps/web/' }).then(registration => {
+      console.log('Service Worker registered:', registration)
+    }).catch(error => {
+      console.log('Service Worker registration failed:', error)
+    })
+  }
+
   // Minimal PWA install affordance if supported
   let deferred;
   window.addEventListener('beforeinstallprompt', (e)=>{
