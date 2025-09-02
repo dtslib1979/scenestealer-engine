@@ -1,103 +1,861 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Scenestealer Engine — MVP</title>
-<meta name="description" content="Preset → tokens → sections → pro finish → export. Static PWA demo." />
-<link rel="manifest" href="./manifest.webmanifest">
-<link rel="stylesheet" href="./style.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Scenestealer Engine</title>
+  <style>
+/* =====================================
+   Scenestealer Engine - Design System
+   ===================================== */
+
+/* CSS Custom Properties (Design Tokens) */
+:root {
+  /* Brand Colors */
+  --primary: #4c8bf5;
+  --primary-hover: #3b7ce8;
+  --primary-light: rgba(76, 139, 245, 0.1);
+  --accent: #8b5cf6;
+  --accent-hover: #7c3aed;
+  --accent-light: rgba(139, 92, 246, 0.1);
+  
+  /* Neutral Colors */
+  --bg: #0b0f16;
+  --bg-elevated: #0f1520;
+  --bg-subtle: #141b26;
+  --surface: #1a212c;
+  --surface-elevated: #1f2734;
+  --border: rgba(255, 255, 255, 0.08);
+  --border-focus: rgba(255, 255, 255, 0.2);
+  --divider: rgba(255, 255, 255, 0.04);
+  
+  /* Text Colors */
+  --text: #e7ecf5;
+  --text-muted: #94a3b8;
+  --text-subtle: #64748b;
+  --text-disabled: #475569;
+  
+  /* State Colors */
+  --success: #10b981;
+  --warning: #f59e0b;
+  --error: #ef4444;
+  --info: #3b82f6;
+  
+  /* Typography Scale */
+  --font-xs: 0.75rem;     /* 12px */
+  --font-sm: 0.875rem;    /* 14px */
+  --font-base: 1rem;      /* 16px */
+  --font-lg: 1.125rem;    /* 18px */
+  --font-xl: 1.25rem;     /* 20px */
+  --font-2xl: 1.75rem;    /* 28px */
+  --font-3xl: 2.25rem;    /* 36px */
+  --font-4xl: 3rem;       /* 48px */
+  
+  /* Line Heights */
+  --leading-tight: 1.2;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.6;
+  
+  /* Font Weights */
+  --weight-normal: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+  --weight-extrabold: 800;
+  
+  /* Spacing Scale (8pt grid) */
+  --space-1: 0.25rem;   /* 4px */
+  --space-2: 0.5rem;    /* 8px */
+  --space-3: 0.75rem;   /* 12px */
+  --space-4: 1rem;      /* 16px */
+  --space-5: 1.25rem;   /* 20px */
+  --space-6: 1.5rem;    /* 24px */
+  --space-8: 2rem;      /* 32px */
+  --space-10: 2.5rem;   /* 40px */
+  --space-12: 3rem;     /* 48px */
+  --space-16: 4rem;     /* 64px */
+  --space-20: 5rem;     /* 80px */
+  
+  /* Border Radius */
+  --radius-sm: 0.375rem;   /* 6px */
+  --radius: 0.5rem;        /* 8px */
+  --radius-md: 0.75rem;    /* 12px */
+  --radius-lg: 1rem;       /* 16px */
+  --radius-xl: 1.5rem;     /* 24px */
+  --radius-full: 9999px;
+  
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  --shadow-glow: 0 0 20px rgba(76, 139, 245, 0.3);
+  
+  /* Glass Effects */
+  --glass-bg: rgba(255, 255, 255, 0.02);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-backdrop: saturate(180%) blur(20px);
+  
+  /* Layout */
+  --topbar-height: 4rem;
+  --sidebar-width: 22rem;
+  --container-max-width: 75rem;
+  
+  /* Transitions */
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 500ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Reset and Base Styles */
+*,
+*::before,
+*::after { box-sizing: border-box; }
+* { margin: 0; padding: 0; }
+html { height: 100%; scroll-behavior: smooth; }
+body {
+  height: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: var(--font-base);
+  line-height: var(--leading-normal);
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+/* Scrollbar */
+::-webkit-scrollbar{width:8px;height:8px}
+::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:var(--radius-full)}
+::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,.2)}
+:focus-visible{outline:2px solid var(--primary);outline-offset:2px}
+::selection{background:var(--primary-light);color:var(--primary)}
+
+/* ===== Topbar ===== */
+.topbar{position:sticky;top:0;z-index:50;height:var(--topbar-height);background:rgba(11,15,22,.8);backdrop-filter:var(--glass-backdrop);border-bottom:1px solid var(--border)}
+.topbar-container{display:flex;align-items:center;justify-content:space-between;height:100%;padding:0 var(--space-6)}
+.brand{display:flex;align-items:center;gap:var(--space-3)}
+.brand-icon{display:flex;align-items:center;justify-content:center;width:2rem;height:2rem;background:linear-gradient(135deg,var(--primary),var(--accent));border-radius:var(--radius-md);color:#fff}
+.brand-text{font-size:var(--font-lg);font-weight:var(--weight-bold)}
+.badge{padding:var(--space-1) var(--space-2);background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);font-size:var(--font-xs);color:var(--text-muted)}
+.topbar-actions{display:flex;align-items:center;gap:var(--space-4)}
+.toggle-group{display:flex;gap:var(--space-4)}
+.toggle-item{display:flex;align-items:center;gap:var(--space-2);cursor:pointer;font-size:var(--font-sm);color:var(--text-muted);transition:color var(--transition-fast)}
+.toggle-item:hover{color:var(--text)}
+.toggle-item input[type="checkbox"]{appearance:none;width:1rem;height:1rem;background:transparent;border:1px solid var(--border);border-radius:var(--radius-sm);transition:all var(--transition-fast);position:relative}
+.toggle-item input[type="checkbox"]:checked{background:var(--primary);border-color:var(--primary)}
+.toggle-item input[type="checkbox"]:checked::after{content:"✓";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:.75rem;color:#fff;line-height:1}
+.hamburger{display:none;flex-direction:column;gap:3px;background:none;border:none;padding:var(--space-2);cursor:pointer;transition:transform var(--transition-fast)}
+.hamburger-line{width:18px;height:2px;background:var(--text);border-radius:var(--radius-full);transition:all var(--transition-fast)}
+.hamburger:hover{transform:scale(1.1)}
+
+/* ===== Shell ===== */
+.shell{display:grid;grid-template-columns:var(--sidebar-width) 1fr;height:calc(100vh - var(--topbar-height))}
+
+/* ===== Sidebar ===== */
+.sidebar{background:var(--bg-elevated);border-right:1px solid var(--border);overflow-y:auto;display:flex;flex-direction:column}
+.sidebar-content{padding:var(--space-6);flex:1}
+.sidebar-nav{display:flex;flex-direction:column;gap:var(--space-8)}
+.nav-section{display:flex;flex-direction:column;gap:var(--space-4)}
+.nav-header{display:flex;flex-direction:column;gap:var(--space-1)}
+.nav-title{font-size:var(--font-lg);font-weight:var(--weight-semibold)}
+.nav-subtitle{font-size:var(--font-sm);color:var(--text-muted)}
+.control-group{display:flex;flex-direction:column;gap:var(--space-4);padding:var(--space-5);background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:var(--radius-lg);backdrop-filter:var(--glass-backdrop)}
+
+/* ===== Form Elements ===== */
+.field{display:flex;flex-direction:column;gap:var(--space-2)}
+.field-label{font-size:var(--font-sm);font-weight:var(--weight-medium);color:var(--text-muted)}
+.field-grid{display:grid;grid-template-columns:1fr 1fr;gap:var(--space-4)}
+.select-wrapper{position:relative}
+.select{width:100%;padding:var(--space-3) var(--space-4);background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text);font-size:var(--font-sm);appearance:none;cursor:pointer;transition:all var(--transition-fast)}
+.select:focus{border-color:var(--border-focus);box-shadow:0 0 0 3px rgba(76,139,245,.1)}
+.select-icon{position:absolute;right:var(--space-3);top:50%;transform:translateY(-50%);pointer-events:none;color:var(--text-muted)}
+.color-input-wrapper{position:relative;display:flex;align-items:center;gap:var(--space-2)}
+.color-input{width:100%;height:2.5rem;padding:var(--space-1);background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);cursor:pointer;transition:all var(--transition-fast)}
+.color-input:focus{border-color:var(--border-focus);box-shadow:0 0 0 3px rgba(76,139,245,.1)}
+.checkbox-list{display:flex;flex-direction:column;gap:var(--space-3)}
+.checkbox-item{display:flex;align-items:center;gap:var(--space-3);cursor:pointer;padding:var(--space-2);border-radius:var(--radius);transition:background-color var(--transition-fast)}
+.checkbox-item:hover{background:var(--glass-bg)}
+.checkbox{appearance:none;width:0;height:0;position:absolute;opacity:0}
+.checkbox-indicator{display:flex;align-items:center;justify-content:center;width:1.25rem;height:1.25rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);transition:all var(--transition-fast)}
+.checkbox:checked + .checkbox-indicator{background:var(--primary);border-color:var(--primary);color:#fff}
+.checkbox-indicator svg{opacity:0;transform:scale(.8);transition:all var(--transition-fast)}
+.checkbox:checked + .checkbox-indicator svg{opacity:1;transform:scale(1)}
+.checkbox-label{font-size:var(--font-sm);font-weight:var(--weight-medium)}
+
+/* ===== Buttons ===== */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:var(--space-2);padding:var(--space-3) var(--space-4);background:transparent;border:1px solid var(--border);border-radius:var(--radius-md);font-size:var(--font-sm);font-weight:var(--weight-medium);color:var(--text);cursor:pointer;transition:all var(--transition-fast);text-decoration:none;white-space:nowrap}
+.btn:hover{transform:translateY(-1px);box-shadow:var(--shadow-lg)}
+.btn-primary{background:linear-gradient(135deg,var(--primary),var(--primary-hover));border-color:transparent;color:#fff;box-shadow:var(--shadow-glow)}
+.btn-primary:hover{background:linear-gradient(135deg,var(--primary-hover),var(--primary));box-shadow:var(--shadow-glow),var(--shadow-lg)}
+.btn-secondary{background:var(--surface);border-color:var(--border)}
+.btn-secondary:hover{background:var(--surface-elevated);border-color:var(--border-focus)}
+.btn-ghost{background:transparent;border-color:transparent;color:var(--text-muted)}
+.btn-ghost:hover{background:var(--glass-bg);color:var(--text)}
+.btn-large{padding:var(--space-4) var(--space-6);font-size:var(--font-base)}
+
+/* ===== Canvas & Preview ===== */
+.canvas{overflow-y:auto;background:var(--bg)}
+.canvas-content{min-height:100%;padding:var(--space-8)}
+.preview-container{max-width:var(--container-max-width);margin:0 auto;display:flex;flex-direction:column;gap:var(--space-12)}
+.preview-section{transition:all var(--transition-normal)}
+.preview-section[hidden]{display:none}
+
+/* ===== Hero ===== */
+.hero-section{padding:var(--space-20) var(--space-8);background:
+  radial-gradient(50% 50% at 20% 0%, rgba(76,139,245,.15), transparent 70%),
+  radial-gradient(50% 50% at 80% 0%, rgba(139,92,246,.1), transparent 70%),
+  linear-gradient(180deg, var(--glass-bg), transparent);
+  border:1px solid var(--glass-border);border-radius:var(--radius-xl);backdrop-filter:var(--glass-backdrop);text-align:center;position:relative;overflow:hidden}
+.hero-content{position:relative;z-index:10;max-width:42rem;margin:0 auto;display:flex;flex-direction:column;gap:var(--space-6);align-items:center}
+.hero-badge{display:inline-flex;align-items:center;gap:var(--space-2);padding:var(--space-2) var(--space-4);background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:var(--radius-full);font-size:var(--font-sm);color:var(--text-muted)}
+.badge-dot{width:var(--space-2);height:var(--space-2);background:var(--success);border-radius:var(--radius-full)}
+.hero-title{font-size:var(--font-4xl);font-weight:var(--weight-extrabold);line-height:var(--leading-tight)}
+.hero-gradient{background:linear-gradient(135deg,var(--primary),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-description{font-size:var(--font-xl);line-height:var(--leading-relaxed);color:var(--text-muted);max-width:32rem}
+.hero-actions{display:flex;flex-wrap:wrap;gap:var(--space-4);justify-content:center}
+.hero-visual{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:100%;height:100%;pointer-events:none;opacity:.1;z-index:1}
+.floating-card{position:absolute;width:120px;height:80px;background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:var(--radius-lg);backdrop-filter:var(--glass-backdrop);animation:float 6s ease-in-out infinite}
+.card-1{top:20%;left:10%;animation-delay:0s}
+.card-2{top:60%;right:10%;animation-delay:-2s}
+.card-3{top:40%;left:60%;animation-delay:-4s}
+.card-header{height:12px;background:linear-gradient(90deg,var(--primary),transparent);border-radius:var(--radius) var(--radius) 0 0;opacity:.3}
+.card-content{padding:var(--space-2);display:flex;flex-direction:column;gap:var(--space-1)}
+.card-content::before,.card-content::after{content:"";display:block;height:4px;border-radius:var(--radius-full);background:var(--text-subtle)}
+.card-content::before{width:80%}.card-content::after{width:60%}
+@keyframes float{0%,100%{transform:translateY(0) rotate(0)}33%{transform:translateY(-10px) rotate(1deg)}66%{transform:translateY(5px) rotate(-1deg)}}
+
+/* ===== Features ===== */
+.features-section{padding:var(--space-16) 0}
+.section-header{text-align:center;margin-bottom:var(--space-12)}
+.section-title{font-size:var(--font-3xl);font-weight:var(--weight-bold);margin-bottom:var(--space-4)}
+.section-description{font-size:var(--font-lg);color:var(--text-muted);max-width:36rem;margin:0 auto}
+.features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(20rem,1fr));gap:var(--space-6)}
+.feature-card{padding:var(--space-8);background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:var(--radius-xl);backdrop-filter:var(--glass-backdrop);transition:all var(--transition-normal)}
+.feature-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-xl);border-color:var(--border-focus)}
+.feature-icon{width:3rem;height:3rem;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--primary-light),var(--accent-light));border-radius:var(--radius-lg);color:var(--primary);margin-bottom:var(--space-6)}
+.feature-title{font-size:var(--font-xl);font-weight:var(--weight-semibold);margin-bottom:var(--space-3)}
+.feature-description{color:var(--text-muted);line-height:var(--leading-relaxed)}
+
+/* ===== FAQ ===== */
+.faq-section{padding:var(--space-16) 0}
+.faq-list{display:flex;flex-direction:column;gap:var(--space-4);max-width:48rem;margin:0 auto}
+.faq-item{background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:var(--radius-lg);overflow:hidden;transition:all var(--transition-normal)}
+.faq-item:hover{border-color:var(--border-focus)}
+.faq-question{padding:var(--space-5) var(--space-6);font-weight:var(--weight-medium);display:flex;align-items:center;justify-content:space-between;cursor:pointer}
+.faq-question:hover{background:var(--glass-bg)}
+.faq-question::after{content:"+";font-size:var(--font-xl);color:var(--text-muted);transition:transform var(--transition-fast)}
+.faq-item[open] .faq-question::after{transform:rotate(45deg)}
+.faq-answer{padding:0 var(--space-6) var(--space-5);color:var(--text-muted);line-height:var(--leading-relaxed);animation:slideDown var(--transition-normal) ease-out}
+@keyframes slideDown{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+
+/* ===== Footer ===== */
+.footer-section{padding:var(--space-12) 0;border-top:1px solid var(--divider);text-align:center}
+.footer-content{display:flex;flex-direction:column;gap:var(--space-4);align-items:center}
+.footer-brand{display:flex;align-items:center;gap:var(--space-3);font-weight:var(--weight-semibold)}
+.footer-text{color:var(--text-muted);font-size:var(--font-sm)}
+
+/* ===== Responsive ===== */
+@media (max-width:768px){
+  .shell{grid-template-columns:1fr}
+  .sidebar{position:fixed;top:var(--topbar-height);left:0;bottom:0;width:var(--sidebar-width);transform:translateX(-100%);transition:transform var(--transition-normal);z-index:40;box-shadow:var(--shadow-xl)}
+  .sidebar.open{transform:translateX(0)}
+  .hamburger{display:flex}
+  .toggle-group{display:none}
+  .topbar-container{padding:0 var(--space-4)}
+  .canvas-content{padding:var(--space-6)}
+  .preview-container{gap:var(--space-8)}
+  .hero-section{padding:var(--space-12) var(--space-6)}
+  .hero-title{font-size:var(--font-3xl)}
+  .hero-description{font-size:var(--font-lg)}
+  .hero-actions{flex-direction:column;width:100%}
+  .features-grid{grid-template-columns:1fr;gap:var(--space-4)}
+  .field-grid{grid-template-columns:1fr}
+}
+@media (max-width:480px){
+  .hero-title{font-size:var(--font-2xl)}
+  .section-title{font-size:var(--font-2xl)}
+  .sidebar-content{padding:var(--space-4)}
+  .control-group{padding:var(--space-4)}
+}
+
+/* ===== Sidebar overlay ===== */
+.sidebar-overlay{position:fixed;inset:var(--topbar-height) 0 0 0;background:rgba(0,0,0,.5);backdrop-filter:blur(4px);opacity:0;visibility:hidden;transition:all var(--transition-normal);z-index:30}
+.sidebar.open ~ .sidebar-overlay{opacity:1;visibility:visible}
+
+/* ===== A11y prefers ===== */
+@media (prefers-reduced-motion: reduce){
+  *{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important}
+  .floating-card{animation:none}
+}
+@media (prefers-contrast: high){
+  :root{--border:rgba(255,255,255,.3);--border-focus:rgba(255,255,255,.6);--text-muted:#cbd5e1}
+}
+  </style>
 </head>
 <body>
-<header class="topbar">
-  <h1>Scenestealer Engine <span class="badge">MVP</span></h1>
-  <div class="toggles">
-    <label><input type="checkbox" id="toggleDark"> Dark</label>
-    <label><input type="checkbox" id="toggleBaseline"> Baseline</label>
-    <label><input type="checkbox" id="toggleHiContrast"> High Contrast</label>
-    <label><input type="checkbox" id="toggleReduceMotion"> Reduce Motion</label>
-  </div>
-</header>
-
-<main class="layout">
-  <aside class="panel">
-    <section>
-      <h2>Start</h2>
-      <div class="field">
-        <label>Preset</label>
-        <select id="presetSelect">
-          <option value="linear">Linear-ish</option>
-        </select>
+  <header class="topbar">
+    <div class="topbar-container">
+      <div class="brand">
+        <div class="brand-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M2 17L12 22L22 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M2 12L12 17L22 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <span class="brand-text">Scenestealer Engine</span>
+        <span class="badge">MVP</span>
       </div>
-      <button id="loadPreset">Load Preset</button>
-    </section>
+      
+      <div class="topbar-actions">
+        <div class="toggle-group">
+          <label class="toggle-item">
+            <input type="checkbox" id="tDark" checked>
+            <span class="toggle-label">Dark</span>
+          </label>
+          <label class="toggle-item">
+            <input type="checkbox" id="tBaseline" checked>
+            <span class="toggle-label">Baseline</span>
+          </label>
+          <label class="toggle-item">
+            <input type="checkbox" id="tContrast">
+            <span class="toggle-label">High Contrast</span>
+          </label>
+          <label class="toggle-item">
+            <input type="checkbox" id="tReduce">
+            <span class="toggle-label">Reduce Motion</span>
+          </label>
+        </div>
+        <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+          <span class="hamburger-line"></span>
+          <span class="hamburger-line"></span>
+          <span class="hamburger-line"></span>
+        </button>
+      </div>
+    </div>
+  </header>
 
-    <section>
-      <h2>Theme</h2>
-      <div class="grid">
-        <div class="field">
-          <label>Primary</label>
-          <input type="color" id="colorPrimary" value="#4c8bf5">
-        </div>
-        <div class="field">
-          <label>Background</label>
-          <input type="color" id="colorBg" value="#0f1115">
-        </div>
-        <div class="field">
-          <label>Foreground</label>
-          <input type="color" id="colorFg" value="#e6e8ee">
-        </div>
-        <div class="field">
-          <label>Accent</label>
-          <input type="color" id="colorAccent" value="#8b5cf6">
-        </div>
-        <div class="field">
-          <label>Radius</label>
-          <input type="range" id="radius" min="0" max="16" step="1" value="10">
-        </div>
-        <div class="field">
-          <label>Shadow</label>
-          <select id="shadow">
-            <option>none</option>
-            <option selected>sm</option>
-            <option>md</option>
-            <option>lg</option>
-          </select>
+  <main class="shell">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-content">
+        <nav class="sidebar-nav">
+          <!-- Start -->
+          <div class="nav-section">
+            <div class="nav-header">
+              <h2 class="nav-title">Start</h2>
+              <p class="nav-subtitle">Choose a preset to begin</p>
+            </div>
+            <div class="control-group">
+              <label class="field">
+                <span class="field-label">Preset</span>
+                <div class="select-wrapper">
+                  <select id="presetSelect" class="select">
+                    <option value="linear">Linear-ish</option>
+                    <option value="vercel">Vercel-ish</option>
+                    <option value="raycast">Raycast-ish</option>
+                  </select>
+                  <div class="select-icon">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                      <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </div>
+                </div>
+              </label>
+              <button id="loadPreset" class="btn btn-primary">Load Preset</button>
+            </div>
+          </div>
+
+          <!-- Theme -->
+          <div class="nav-section">
+            <div class="nav-header">
+              <h2 class="nav-title">Theme</h2>
+              <p class="nav-subtitle">Customize colors and tokens</p>
+            </div>
+            <div class="control-group">
+              <div class="field-grid">
+                <label class="field">
+                  <span class="field-label">Primary</span>
+                  <div class="color-input-wrapper">
+                    <input type="color" id="cPrimary" value="#4c8bf5" class="color-input">
+                    <div class="color-preview"></div>
+                  </div>
+                </label>
+                <label class="field">
+                  <span class="field-label">Accent</span>
+                  <div class="color-input-wrapper">
+                    <input type="color" id="cAccent" value="#8b5cf6" class="color-input">
+                    <div class="color-preview"></div>
+                  </div>
+                </label>
+                <label class="field">
+                  <span class="field-label">Background</span>
+                  <div class="color-input-wrapper">
+                    <input type="color" id="cBg" value="#0b0f16" class="color-input">
+                    <div class="color-preview"></div>
+                  </div>
+                </label>
+                <label class="field">
+                  <span class="field-label">Foreground</span>
+                  <div class="color-input-wrapper">
+                    <input type="color" id="cFg" value="#e7ecf5" class="color-input">
+                    <div class="color-preview"></div>
+                  </div>
+                </label>
+                <label class="field">
+                  <span class="field-label">Radius</span>
+                  <div class="select-wrapper">
+                    <select id="radius" class="select">
+                      <option value="8">8px</option>
+                      <option value="16" selected>16px</option>
+                      <option value="20">20px</option>
+                    </select>
+                    <div class="select-icon">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                        <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                    </div>
+                  </div>
+                </label>
+                <label class="field">
+                  <span class="field-label">Shadow</span>
+                  <div class="select-wrapper">
+                    <select id="shadow" class="select">
+                      <option value="sm">Small</option>
+                      <option value="md" selected>Medium</option>
+                      <option value="lg">Large</option>
+                    </select>
+                    <div class="select-icon">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                        <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                    </div>
+                  </div>
+                </label>
+              </div>
+              <button id="applyTheme" class="btn btn-primary">Apply Theme</button>
+            </div>
+          </div>
+
+          <!-- Sections -->
+          <div class="nav-section">
+            <div class="nav-header">
+              <h2 class="nav-title">Sections</h2>
+              <p class="nav-subtitle">Toggle page sections</p>
+            </div>
+            <div class="control-group">
+              <div class="checkbox-list">
+                <label class="checkbox-item">
+                  <input type="checkbox" data-section="hero" checked class="checkbox">
+                  <div class="checkbox-indicator">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+                      <path d="M20 6L9 17L4 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </div>
+                  <span class="checkbox-label">Hero Section</span>
+                </label>
+                <label class="checkbox-item">
+                  <input type="checkbox" data-section="features" checked class="checkbox">
+                  <div class="checkbox-indicator">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+                      <path d="M20 6L9 17L4 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </div>
+                  <span class="checkbox-label">Features Grid</span>
+                </label>
+                <label class="checkbox-item">
+                  <input type="checkbox" data-section="pricing" class="checkbox">
+                  <div class="checkbox-indicator">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+                      <path d="M20 6L9 17L4 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </div>
+                  <span class="checkbox-label">Pricing Table</span>
+                </label>
+                <label class="checkbox-item">
+                  <input type="checkbox" data-section="faq" checked class="checkbox">
+                  <div class="checkbox-indicator">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+                      <path d="M20 6L9 17L4 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </div>
+                  <span class="checkbox-label">FAQ Section</span>
+                </label>
+                <label class="checkbox-item">
+                  <input type="checkbox" data-section="footer" class="checkbox">
+                  <div class="checkbox-indicator">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+                      <path d="M20 6L9 17L4 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </div>
+                  <span class="checkbox-label">Footer</span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Export -->
+          <div class="nav-section">
+            <div class="nav-header">
+              <h2 class="nav-title">Export</h2>
+              <p class="nav-subtitle">Download or copy your work</p>
+            </div>
+            <div class="control-group">
+              <button id="downloadTheme" class="btn btn-secondary">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                  <path d="M21 15V19A2 2 0 0 1 19 21H5A2 2 0 0 1 3 19V15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <polyline points="7,10 12,15 17,10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <line x1="12" y1="15" x2="12" y2="3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Download Theme JSON
+              </button>
+              <button id="copyHtml" class="btn btn-ghost">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2" stroke="currentColor" stroke-width="2" fill="none"/>
+                  <path d="M5 15H4A2 2 0 0 1 2 13V4A2 2 0 0 1 4 2H13A2 2 0 0 1 15 4V5" stroke="currentColor" stroke-width="2" fill="none"/>
+                </svg>
+                Copy Current HTML
+              </button>
+            </div>
+          </div>
+        </nav>
+      </div>
+    </aside>
+
+    <section class="canvas" id="canvas">
+      <div class="canvas-content">
+        <div class="preview-container">
+          <!-- Hero -->
+          <section id="hero" class="preview-section hero-section">
+            <div class="hero-content">
+              <div class="hero-badge">
+                <div class="badge-dot"></div>
+                <span>Now Available</span>
+              </div>
+              <h1 class="hero-title">
+                Aesthetic UI, <span class="hero-gradient">faster</span>.
+              </h1>
+              <p class="hero-description">
+                Start from a great preset, tweak tokens, assemble sections, ship with pro finish.
+              </p>
+              <div class="hero-actions">
+                <button class="btn btn-primary btn-large">Get Started</button>
+                <button class="btn btn-secondary btn-large">Documentation</button>
+              </div>
+            </div>
+            <div class="hero-visual">
+              <div class="floating-card card-1">
+                <div class="card-header"></div>
+                <div class="card-content"></div>
+              </div>
+              <div class="floating-card card-2">
+                <div class="card-header"></div>
+                <div class="card-content"></div>
+              </div>
+              <div class="floating-card card-3">
+                <div class="card-header"></div>
+                <div class="card-content"></div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Features -->
+          <section id="features" class="preview-section features-section">
+            <div class="section-header">
+              <h2 class="section-title">Features</h2>
+              <p class="section-description">
+                Everything you need to build beautiful, cohesive interfaces quickly and efficiently.
+              </p>
+            </div>
+            <div class="features-grid">
+              <div class="feature-card">
+                <div class="feature-icon">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/>
+                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" stroke="currentColor" stroke-width="2"/>
+                  </svg>
+                </div>
+                <h3 class="feature-title">Theme Tokens</h3>
+                <p class="feature-description">
+                  Cohesive styling from a single source of truth. Change colors, spacing, and typography globally with ease.
+                </p>
+              </div>
+              <div class="feature-card">
+                <div class="feature-icon">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2" stroke="currentColor" stroke-width="2"/>
+                    <rect x="7" y="7" width="3" height="3" rx="1" ry="1" fill="currentColor"/>
+                    <rect x="14" y="7" width="3" height="3" rx="1" ry="1" fill="currentColor"/>
+                    <rect x="7" y="14" width="10" height="3" rx="1" ry="1" fill="currentColor"/>
+                  </svg>
+                </div>
+                <h3 class="feature-title">Reusable Components</h3>
+                <p class="feature-description">
+                  Pre-built sections and components that work together seamlessly. Mix and match to create unique layouts.
+                </p>
+              </div>
+              <div class="feature-card">
+                <div class="feature-icon">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path d="M14 9V5a3 3 0 0 0-6 0v4" stroke="currentColor" stroke-width="2"/>
+                    <rect x="2" y="9" width="20" height="12" rx="2" ry="2" stroke="currentColor" stroke-width="2"/>
+                    <circle cx="12" cy="15" r="1" fill="currentColor"/>
+                  </svg>
+                </div>
+                <h3 class="feature-title">Pro Finish</h3>
+                <p class="feature-description">
+                  Professional polish with accessibility features, responsive design, and performance optimizations built-in.
+                </p>
+              </div>
+              <div class="feature-card">
+                <div class="feature-icon">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path d="M21 15V19A2 2 0 0 1 19 21H5A2 2 0 0 1 3 19V15" stroke="currentColor" stroke-width="2"/>
+                    <polyline points="7,10 12,15 17,10" stroke="currentColor" stroke-width="2"/>
+                    <line x1="12" y1="15" x2="12" y2="3" stroke="currentColor" stroke-width="2"/>
+                  </svg>
+                </div>
+                <h3 class="feature-title">Export/Pages</h3>
+                <p class="feature-description">
+                  Export your designs as code or deploy directly to GitHub Pages. Share your work instantly with the world.
+                </p>
+              </div>
+            </div>
+          </section>
+
+          <!-- FAQ -->
+          <section id="faq" class="preview-section faq-section">
+            <div class="section-header">
+              <h2 class="section-title">Frequently Asked Questions</h2>
+              <p class="section-description">
+                Common questions about Scenestealer Engine and how it works.
+              </p>
+            </div>
+            <div class="faq-list">
+              <details class="faq-item">
+                <summary class="faq-question">Is this legal?</summary>
+                <div class="faq-answer">
+                  <p>We use style tokens, not copying logos/assets. This approach focuses on design patterns and color schemes rather than proprietary content.</p>
+                </div>
+              </details>
+              <details class="faq-item">
+                <summary class="faq-question">Mobile friendly?</summary>
+                <div class="faq-answer">
+                  <p>Yes, preview and edits work on mobile. The interface is fully responsive and optimized for touch interactions.</p>
+                </div>
+              </details>
+              <details class="faq-item">
+                <summary class="faq-question">Export options?</summary>
+                <div class="faq-answer">
+                  <p>Copy HTML or download theme JSON now; ZIP/PR export features are coming later. You can also deploy directly to GitHub Pages.</p>
+                </div>
+              </details>
+            </div>
+          </section>
+
+          <!-- Footer -->
+          <footer id="footer" class="preview-section footer-section" style="display: none;">
+            <div class="footer-content">
+              <div class="footer-brand">
+                <div class="brand-icon" style="width: 1.5rem; height: 1.5rem;">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M2 17L12 22L22 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M2 12L12 17L22 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </div>
+                <span>Scenestealer Engine</span>
+              </div>
+              <p class="footer-text">© 2024 Scenestealer Engine. All rights reserved.</p>
+            </div>
+          </footer>
         </div>
       </div>
-      <button id="applyTheme">Apply Theme</button>
     </section>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+  </main>
 
-    <section>
-      <h2>Sections</h2>
-      <label><input type="checkbox" class="sectionToggle" data-id="hero" checked> Hero</label>
-      <label><input type="checkbox" class="sectionToggle" data-id="features" checked> Features</label>
-      <label><input type="checkbox" class="sectionToggle" data-id="pricing"> Pricing</label>
-      <label><input type="checkbox" class="sectionToggle" data-id="faq"> FAQ</label>
-      <label><input type="checkbox" class="sectionToggle" data-id="footer" checked> Footer</label>
-    </section>
+  <script>
+// State management and utilities
+const $ = (q) => document.querySelector(q);
+const $$ = (q) => Array.from(document.querySelectorAll(q));
 
-    <section>
-      <h2>Export</h2>
-      <button id="downloadTheme">Download Theme JSON</button>
-      <button id="copyHTML">Copy Current HTML</button>
-    </section>
-  </aside>
+const state = {
+  tokens: {
+    colors: { primary: '#4c8bf5', bg: '#0b0f16', fg: '#e7ecf5', accent: '#8b5cf6' },
+    radii: 16,
+    shadow: 'md'
+  },
+  sections: { hero: true, features: true, pricing: false, faq: true, footer: false }
+};
 
-  <section class="preview" id="preview"></section>
-</main>
+const SHADOWS = {
+  none: 'none',
+  sm: '0 1px 2px rgba(0,0,0,.25)',
+  md: '0 4px 12px rgba(0,0,0,.25)',
+  lg: '0 10px 30px rgba(0,0,0,.35)'
+};
 
-<footer class="footnote">
-  <small>PWA installed? <span id="pwaStatus">checking…</span></small>
-</footer>
+// Apply tokens to CSS variables
+function applyTokens() {
+  const r = document.documentElement;
+  r.style.setProperty('--primary', state.tokens.colors.primary);
+  r.style.setProperty('--bg', state.tokens.colors.bg);
+  r.style.setProperty('--text', state.tokens.colors.fg);
+  r.style.setProperty('--accent', state.tokens.colors.accent);
+  r.style.setProperty('--radius', state.tokens.radii + 'px');
+  r.style.setProperty('--shadow', SHADOWS[state.tokens.shadow] || SHADOWS.md);
+}
 
-<script src="./app.js"></script>
-<script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('./sw.js');
-    });
+// Show/hide sections
+function updateSections() {
+  Object.keys(state.sections).forEach(section => {
+    const el = $(`#${section}`);
+    if (el) {
+      if (state.sections[section]) {
+        el.style.display = '';
+        el.hidden = false;
+      } else {
+        el.style.display = 'none';
+        el.hidden = true;
+      }
+    }
+  });
+}
+
+// Mobile sidebar toggle
+function toggleSidebar() {
+  const sidebar = $('#sidebar');
+  const overlay = $('#sidebarOverlay');
+  const isOpen = sidebar.classList.contains('open');
+  
+  if (isOpen) {
+    sidebar.classList.remove('open');
+    overlay.style.display = 'none';
+  } else {
+    sidebar.classList.add('open');
+    overlay.style.display = 'block';
   }
-</script>
+}
+
+// Event listeners
+$('#hamburger').addEventListener('click', toggleSidebar);
+$('#sidebarOverlay').addEventListener('click', toggleSidebar);
+
+// Preset loading
+$('#loadPreset').addEventListener('click', async () => {
+  const name = $('#presetSelect').value;
+  try {
+    const res = await fetch(`./presets/${name}.json`);
+    const json = await res.json();
+    if (json.tokens) {
+      state.tokens = { ...state.tokens, ...json.tokens };
+      
+      // Update form inputs
+      $('#cPrimary').value = state.tokens.colors.primary;
+      $('#cAccent').value = state.tokens.colors.accent;
+      $('#cBg').value = state.tokens.colors.bg;
+      $('#cFg').value = state.tokens.colors.fg;
+      $('#radius').value = state.tokens.radii;
+      $('#shadow').value = state.tokens.shadow;
+      
+      applyTokens();
+    }
+  } catch (error) {
+    console.warn('Preset not found, using defaults');
+  }
+});
+
+// Theme controls
+$('#applyTheme').addEventListener('click', () => {
+  state.tokens.colors.primary = $('#cPrimary').value;
+  state.tokens.colors.accent = $('#cAccent').value;
+  state.tokens.colors.bg = $('#cBg').value;
+  state.tokens.colors.fg = $('#cFg').value;
+  state.tokens.radii = +$('#radius').value;
+  state.tokens.shadow = $('#shadow').value;
+  applyTokens();
+});
+
+// Section toggles
+$$('input[data-section]').forEach(cb => {
+  cb.addEventListener('change', e => {
+    const section = e.target.dataset.section;
+    state.sections[section] = e.target.checked;
+    updateSections();
+  });
+});
+
+// Accessibility toggles
+$('#tDark').addEventListener('change', e => {
+  if (e.target.checked) {
+    state.tokens.colors.bg = '#0b0f16';
+    state.tokens.colors.fg = '#e7ecf5';
+  } else {
+    state.tokens.colors.bg = '#ffffff';
+    state.tokens.colors.fg = '#1f2937';
+  }
+  $('#cBg').value = state.tokens.colors.bg;
+  $('#cFg').value = state.tokens.colors.fg;
+  applyTokens();
+});
+
+$('#tBaseline').addEventListener('change', e => {
+  document.body.classList.toggle('baseline', e.target.checked);
+});
+
+$('#tContrast').addEventListener('change', e => {
+  document.body.classList.toggle('high-contrast', e.target.checked);
+});
+
+$('#tReduce').addEventListener('change', e => {
+  document.body.classList.toggle('reduce-motion', e.target.checked);
+  if (e.target.checked) {
+    document.body.style.setProperty('--transition-fast', '0ms');
+    document.body.style.setProperty('--transition-normal', '0ms');
+    document.body.style.setProperty('--transition-slow', '0ms');
+  } else {
+    document.body.style.removeProperty('--transition-fast');
+    document.body.style.removeProperty('--transition-normal');
+    document.body.style.removeProperty('--transition-slow');
+  }
+});
+
+// Export functions
+$('#downloadTheme').addEventListener('click', () => {
+  const blob = new Blob([JSON.stringify({ tokens: state.tokens }, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'theme.json';
+  a.click();
+  URL.revokeObjectURL(a.href);
+});
+
+$('#copyHtml').addEventListener('click', () => {
+  const html = document.documentElement.outerHTML;
+  navigator.clipboard.writeText(html).then(() => {
+    // Show a brief confirmation
+    const btn = $('#copyHtml');
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17L4 12" stroke="currentColor" stroke-width="2"/></svg>Copied!';
+    setTimeout(() => {
+      btn.innerHTML = originalText;
+    }, 2000);
+  });
+});
+
+// Initialize
+applyTokens();
+updateSections();
+
+// PWA detection (optional)
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js').catch(() => {
+      // Service worker registration failed, but app still works
+    });
+  });
+}
+  </script>
 </body>
 </html>
