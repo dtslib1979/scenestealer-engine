@@ -75,6 +75,7 @@
       </div>
 
       <h2>📥 Export</h2>
+      <button id="exportDesign" class="export-primary">Export Current Design</button>
       <button id="downloadTheme">Download Theme</button>
       <button id="copyHTML">Copy HTML</button>
     </div>
@@ -88,7 +89,17 @@
     Built with vanilla JS. No build step required.
   </div>
 
+  <script src="export.js"></script>
   <script src="app.js"></script>
-  <script src="sw.js"></script>
+  <script>
+    // Register service worker
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./sw.js').then(registration => {
+        console.log('Service Worker registered:', registration)
+      }).catch(error => {
+        console.log('Service Worker registration failed:', error)
+      })
+    }
+  </script>
 </body>
 </html>

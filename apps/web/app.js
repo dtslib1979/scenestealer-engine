@@ -17,6 +17,32 @@ const SHADOWS = {
   lg: '0 10px 30px rgba(0,0,0,.35)'
 }
 
+// LocalStorage persistence functions
+function saveState() {
+  try {
+    localStorage.setItem('scenestealer-tokens', JSON.stringify(state.tokens))
+    localStorage.setItem('scenestealer-sections', JSON.stringify(state.sections))
+  } catch (e) {
+    console.warn('Could not save to localStorage:', e)
+  }
+}
+
+function loadState() {
+  try {
+    const savedTokens = localStorage.getItem('scenestealer-tokens')
+    const savedSections = localStorage.getItem('scenestealer-sections')
+    
+    if (savedTokens) {
+      state.tokens = { ...state.tokens, ...JSON.parse(savedTokens) }
+    }
+    if (savedSections) {
+      state.sections = { ...state.sections, ...JSON.parse(savedSections) }
+    }
+  } catch (e) {
+    console.warn('Could not load from localStorage:', e)
+  }
+}
+
 function applyTokens(){
   const r = document.documentElement
   r.style.setProperty('--color-primary', state.tokens.colors.primary)
@@ -25,6 +51,7 @@ function applyTokens(){
   r.style.setProperty('--color-accent', state.tokens.colors.accent)
   r.style.setProperty('--radius', state.tokens.radii + 'px')
   r.style.setProperty('--shadow', SHADOWS[state.tokens.shadow] || SHADOWS.sm)
+  saveState()
   render()
 }
 
@@ -134,6 +161,7 @@ $$('.sectionToggle').forEach(cb=>{
   cb.addEventListener('change', e=>{
     const id = e.target.dataset.id
     state.sections[id] = e.target.checked
+    saveState()
     render()
   })
 })
@@ -163,6 +191,14 @@ $('#downloadTheme').addEventListener('click', ()=>{
   const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'theme.json'; a.click()
   URL.revokeObjectURL(a.href)
 })
+
+$('#exportDesign').addEventListener('click', ()=>{
+  if (window.ScenestealerExport) {
+    window.ScenestealerExport.exportCurrentDesign(state.tokens, state.sections)
+  } else {
+    alert('Export functionality not loaded. Please refresh the page.')
+  }
+})
 $('#copyHTML').addEventListener('click', ()=>{
   const html = document.documentElement.outerHTML
   navigator.clipboard.writeText(html).then(()=>alert('HTML copied to clipboard'))
@@ -173,6 +209,28 @@ function detectPWA(){
   $('#pwaStatus').textContent = isStandalone ? 'yes' : 'no'
 }
 
+function initializeUI() {
+  // Load saved state
+  loadState()
+  
+  // Update UI controls to reflect loaded state
+  $('#colorPrimary').value = state.tokens.colors.primary
+  $('#colorBg').value = state.tokens.colors.bg
+  $('#colorFg').value = state.tokens.colors.fg
+  $('#colorAccent').value = state.tokens.colors.accent
+  $('#radius').value = state.tokens.radii
+  $('#shadow').value = state.tokens.shadow
+  
+  // Update section toggles
+  $$('.sectionToggle').forEach(cb => {
+    const id = cb.dataset.id
+    if (state.sections.hasOwnProperty(id)) {
+      cb.checked = state.sections[id]
+    }
+  })
+}
+
+initializeUI()
 applyTokens()
 detectPWA()
 render()
