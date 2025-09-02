@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Scenestealer Engine — MVP</title>
+<meta name="description" content="Preset → tokens → sections → pro finish → export. Static PWA demo." />
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="stylesheet" href="./style.css">
+</head>
+<body>
+<header class="topbar">
+  <h1>Scenestealer Engine <span class="badge">MVP</span></h1>
+  <div class="toggles">
+    <label><input type="checkbox" id="toggleDark"> Dark</label>
+    <label><input type="checkbox" id="toggleBaseline"> Baseline</label>
+    <label><input type="checkbox" id="toggleHiContrast"> High Contrast</label>
+    <label><input type="checkbox" id="toggleReduceMotion"> Reduce Motion</label>
+  </div>
+</header>
+
+<main class="layout">
+  <aside class="panel">
+    <section>
+      <h2>Start</h2>
+      <div class="field">
+        <label>Preset</label>
+        <select id="presetSelect">
+          <option value="linear">Linear-ish</option>
+        </select>
+      </div>
+      <button id="loadPreset">Load Preset</button>
+    </section>
+
+    <section>
+      <h2>Theme</h2>
+      <div class="grid">
+        <div class="field">
+          <label>Primary</label>
+          <input type="color" id="colorPrimary" value="#4c8bf5">
+        </div>
+        <div class="field">
+          <label>Background</label>
+          <input type="color" id="colorBg" value="#0f1115">
+        </div>
+        <div class="field">
+          <label>Foreground</label>
+          <input type="color" id="colorFg" value="#e6e8ee">
+        </div>
+        <div class="field">
+          <label>Accent</label>
+          <input type="color" id="colorAccent" value="#8b5cf6">
+        </div>
+        <div class="field">
+          <label>Radius</label>
+          <input type="range" id="radius" min="0" max="16" step="1" value="10">
+        </div>
+        <div class="field">
+          <label>Shadow</label>
+          <select id="shadow">
+            <option>none</option>
+            <option selected>sm</option>
+            <option>md</option>
+            <option>lg</option>
+          </select>
+        </div>
+      </div>
+      <button id="applyTheme">Apply Theme</button>
+    </section>
+
+    <section>
+      <h2>Sections</h2>
+      <label><input type="checkbox" class="sectionToggle" data-id="hero" checked> Hero</label>
+      <label><input type="checkbox" class="sectionToggle" data-id="features" checked> Features</label>
+      <label><input type="checkbox" class="sectionToggle" data-id="pricing"> Pricing</label>
+      <label><input type="checkbox" class="sectionToggle" data-id="faq"> FAQ</label>
+      <label><input type="checkbox" class="sectionToggle" data-id="footer" checked> Footer</label>
+    </section>
+
+    <section>
+      <h2>Export</h2>
+      <button id="downloadTheme">Download Theme JSON</button>
+      <button id="copyHTML">Copy Current HTML</button>
+    </section>
+  </aside>
+
+  <section class="preview" id="preview"></section>
+</main>
+
+<footer class="footnote">
+  <small>PWA installed? <span id="pwaStatus">checking…</span></small>
+</footer>
+
+<script src="./app.js"></script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js');
+    });
+  }
+</script>
+</body>
+</html>
