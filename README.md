@@ -1,19 +1,36 @@
-# 🎭 Scenestealer Engine — Static PWA (MVP)
+# 🎬 SceneStealer Engine — Sample Repo Template (Static)
 
-Preset → tokens → sections → pro finish → export. Zero-build static app + GitHub Pages deploy.
+This repository is a **base template** for creating and customizing lightweight web apps with **GitHub Pages**.  
+It's designed as a **fork-and-edit** starter: copy, tweak, and publish—no backend, no APIs.
 
-## Quick start
-1) Merge this PR to `main`.
-2) Wait for the Pages workflow to finish.
-3) Open: `https://USERNAME.github.io/REPO/`.
+## Philosophy
+- **Repository = App Unit (Static)**
+- **Author = Baseline (denominator)**, **User = Inputs (numerator)**
+- No real-time updates; changes are manual (commit/push).
 
-## Folders
-- `apps/web` — static PWA app
-- `apps/web/presets` — theme JSON
-- `.github/workflows/pages-deploy.yml` — Pages deploy action
+## Structure
 
-## Roadmap
-- Serverless crawler (style tokens only)
-- Component code generator
-- Brand-safety guard
-- ZIP/PR export
+```
+/
+├── index.html        # Main demo (self-contained UI)
+├── assets/           # Images/fonts/etc.
+├── styles/           # Optional CSS stubs
+├── scripts/          # Optional JS stubs
+├── .github/workflows/pages.yml  # GitHub Pages deploy
+└── README.md
+```
+
+## How To Use
+1. **Fork** this repo.
+2. Enable **GitHub Pages**: Settings → Pages → Source = `GitHub Actions`.
+3. Edit `index.html`, `styles/`, `scripts/` as you like.
+4. **Commit & push** → Pages auto-deploys.
+5. Your site: `https://<your-username>.github.io/<repo-name>/`
+
+## Features
+- Fully static (no external APIs)
+- Theme tokens / section toggles / export JSON & copy HTML
+- Mobile responsive + Accessibility helpers
+
+## License
+MIT

@@ -1,146 +1,673 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Scenestealer Engine</title>
-<meta name="description" content="Preset → tokens → sections → pro finish → export. Build aesthetic UIs fast." />
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><circle cx='32' cy='32' r='30' fill='%234c8bf5'/><path d='M18 40c8 4 20 4 28 0-2 6-8 10-14 10s-12-4-14-10Z' fill='white'/><circle cx='26' cy='26' r='4' fill='white'/><circle cx='38' cy='26' r='4' fill='white'/></svg>">
-<link rel="manifest" href="./apps/web/manifest.webmanifest">
-<meta property="og:title" content="Scenestealer Engine" />
-<meta property="og:description" content="Extract the vibe. Assemble the site. Finish like a pro." />
-<meta property="og:type" content="website" />
-<style>
-  :root{
-    --bg:#0b0f16; --ink:#e7ecf5; --muted:#94a3b8; --primary:#4c8bf5; --accent:#8b5cf6;
-    --card:#0f1520; --border:#1f2734; --radius:12px; --glow: 0 10px 40px rgba(76,139,245,.25);
-    --shadow: 0 4px 12px rgba(0,0,0,.25);
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Scenestealer Engine</title>
+  <meta name="description" content="Extract the vibe · Assemble the site · Finish like a pro. Build aesthetic UIs fast." />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><circle cx='32' cy='32' r='30' fill='%234c8bf5'/><path d='M18 40c8 4 20 4 28 0-2 6-8 10-14 10s-12-4-14-10Z' fill='white'/><circle cx='26' cy='26' r='4' fill='white'/><circle cx='38' cy='26' r='4' fill='white'/></svg>">
+  <style>
+  :root {
+    --color-bg: #0f1115;
+    --color-fg: #e6e8ee;
+    --color-primary: #4c8bf5;
+    --color-accent: #8b5cf6;
+    --radius: 10px;
+    --shadow: 0 1px 2px rgba(0,0,0,.25);
+    --border: #2a2f3a;
+    --card: #0b0d11;
+    --transition-fast: 0.15s ease-out;
+    --transition-smooth: 0.3s ease-out;
+    --font-body: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Noto Sans, Helvetica, Arial;
   }
-  *{box-sizing:border-box}
-  html,body{height:100%}
-  body{
-    margin:0; font: 15px/1.6 ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
-    color:var(--ink);
-    background:
-      radial-gradient(1200px 600px at 10% -10%, rgba(76,139,245,.20), transparent 60%),
-      radial-gradient(900px 500px at 110% 10%, rgba(139,92,246,.18), transparent 60%),
-      linear-gradient(180deg, #0a0e14, #0b0f16);
-  }
-  .wrap{
-    min-height:100%;
-    display:grid; place-items:center; padding:28px;
-  }
-  .card{
-    width:min(820px, 94vw);
-    background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.00)) , var(--card);
-    border:1px solid var(--border);
-    border-radius:var(--radius);
-    box-shadow: var(--glow);
-    overflow:hidden;
-  }
-  .top{
-    padding:28px 28px 0 28px;
-    display:flex; align-items:center; gap:12px;
-  }
-  .logo{
-    width:36px;height:36px;border-radius:10px;
-    background: radial-gradient(60% 60% at 30% 20%, rgba(76,139,245,.6), rgba(139,92,246,.6));
-    display:grid;place-items:center;color:#fff;font-weight:900;
-  }
-  .brand h1{margin:0;font-size:18px}
-  .brand p{margin:2px 0 0 0;color:var(--muted);font-size:13px}
 
-  .hero{
-    padding:24px 28px 32px 28px;
-    display:grid; gap:10px;
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; }
+  body {
+    background: var(--color-bg);
+    color: var(--color-fg);
+    font-family: var(--font-body);
+    line-height: 1.6;
+    transition: background-color var(--transition-smooth), color var(--transition-smooth);
   }
-  .hero h2{margin:6px 0 0 0;font-size:28px;letter-spacing:.2px}
-  .hero p{margin:0;color:var(--muted)}
-  .cta{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
-  .btn{
-    appearance:none;border:1px solid var(--border);background:#0d1420;color:var(--ink);text-decoration:none;
-    padding:12px 20px;border-radius:var(--radius);font-weight:600;cursor:pointer;display:inline-block;
-    transition: all 0.2s ease;box-shadow:var(--shadow);
+
+  /* App Layout */
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    background: var(--card);
+    position: sticky;
+    top: 0;
+    z-index: 10;
   }
-  .btn.primary{background:var(--primary);border-color:transparent;color:#fff;box-shadow:var(--glow)}
-  .btn:hover{opacity:.95;transform:translateY(-1px);box-shadow: 0 6px 20px rgba(0,0,0,.3)}
-  .features{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-top:10px}
-  .chip{
-    border:1px solid var(--border);border-radius:12px;padding:10px 12px;background:#0b1220;color:var(--muted);
+  .topbar h1 { font-size: 18px; margin: 0; }
+  .badge {
+    background: var(--color-primary);
+    color: #fff;
+    padding: 2px 6px;
+    border-radius: 999px;
+    margin-left: 6px;
+    font-size: 12px;
   }
-  .foot{
-    display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--border);
-    padding:12px 16px;color:var(--muted);font-size:12px;background:rgba(255,255,255,.01)
+  .toggles label { margin-right: 12px; font-size: 13px; opacity: .9; }
+
+  .layout {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 16px;
+    max-width: 1200px;
+    margin: 16px auto;
+    padding: 0 12px;
   }
-  .kbd{border:1px solid var(--border);padding:2px 6px;border-radius:8px;background:#0c1320;color:#cbd5e1;font-size:12px}
-  @media (max-width:640px){ .hero h2{font-size:22px} }
-</style>
+  .panel {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 12px;
+    background: var(--card);
+  }
+  .panel h2 { margin: 8px 0 6px 0; font-size: 14px; opacity: .95; }
+  .field { display: flex; flex-direction: column; margin-bottom: 10px; font-size: 13px; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+  button, .btn {
+    background: var(--color-primary);
+    color: #fff;
+    border: 0;
+    border-radius: var(--radius);
+    padding: 10px 12px;
+    cursor: pointer;
+    box-shadow: var(--shadow);
+    font-weight: 600;
+    margin-top: 6px;
+    transition: all var(--transition-fast);
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+  }
+  button:hover, .btn:hover { opacity: .95; transform: translateY(-1px); }
+  button:active, .btn:active { transform: translateY(1px); }
+
+  .export-primary {
+    background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+    font-size: 14px;
+    padding: 12px 16px;
+    margin-bottom: 8px;
+    box-shadow: 0 4px 12px rgba(76,139,245,0.3);
+  }
+
+  .preview {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    min-height: 60vh;
+    padding: 16px;
+    position: relative;
+    overflow: auto;
+    background: 
+      radial-gradient(60% 60% at 30% 20%, rgba(76,139,245,.08), transparent 60%),
+      radial-gradient(50% 60% at 80% 0%, rgba(139,92,246,.08), transparent 60%);
+  }
+
+  /* Section Styles */
+  .section {
+    border: 1px solid #262b35;
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-bottom: 14px;
+    background: #0f131a;
+    box-shadow: var(--shadow);
+    transition: all var(--transition-smooth);
+  }
+  .section h3 { margin: 0 0 8px 0; color: var(--color-fg); }
+
+  .hero {
+    padding: 40px;
+    display: grid;
+    gap: 12px;
+    text-align: center;
+    background: linear-gradient(180deg, rgba(76,139,245,.08), transparent 40%);
+  }
+  .hero .cta { display: flex; gap: 10px; justify-content: center; margin-top: 8px; }
+  .hero .btn {
+    padding: 10px 14px;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    background: #111522;
+  }
+  .hero .btn.primary { background: var(--color-primary); color: #fff; }
+
+  .features .grid-layout { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+  .card {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+    background: #0d1118;
+    box-shadow: var(--shadow);
+  }
+
+  .pricing .tiers { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
+  .tier {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px;
+    background: #0d1118;
+  }
+  .tier .price { font-size: 28px; font-weight: 800; margin: 6px 0; color: var(--color-primary); }
+
+  .faq details {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 10px 14px;
+    background: #0d1118;
+    margin-bottom: 8px;
+  }
+
+  .footer-section { display: flex; justify-content: space-between; align-items: center; font-size: 13px; }
+
+  /* Accessibility & Theme Options */
+  .baseline body { background-image: linear-gradient(rgba(255,255,255,.06) 1px, transparent 1px); background-size: 100% 8px; }
+  .high-contrast { --color-fg: #ffffff; --color-bg: #0a0c10; }
+  .reduce-motion * { transition: none !important; animation: none !important; }
+
+  .footnote { max-width: 1200px; margin: 0 auto; padding: 8px 12px; color: #9aa3b2; font-size: 12px; }
+  @media (max-width: 900px) { .layout { grid-template-columns: 1fr; } }
+  </style>
 </head>
 <body>
-<div class="wrap">
-  <section class="card">
-    <div class="top">
-      <div class="logo">SE</div>
-      <div class="brand">
-        <h1>Scenestealer Engine</h1>
-        <p>Extract the vibe · Assemble the site · Finish like a pro</p>
+  <div class="topbar">
+    <h1>Scenestealer Engine <span class="badge">Static</span></h1>
+    <div class="toggles">
+      <label><input type="checkbox" id="toggleDark"> Dark</label>
+      <label><input type="checkbox" id="toggleHiContrast"> High Contrast</label>
+      <label><input type="checkbox" id="toggleBaseline"> Baseline</label>
+      <label><input type="checkbox" id="toggleReduceMotion"> Reduce Motion</label>
+    </div>
+  </div>
+
+  <div class="layout">
+    <div class="panel">
+      <h2>🎨 Theme Tokens</h2>
+      <div class="field">
+        <label>Primary Color</label>
+        <input type="color" id="colorPrimary" value="#4c8bf5">
       </div>
+      <div class="field">
+        <label>Background</label>
+        <input type="color" id="colorBg" value="#0f1115">
+      </div>
+      <div class="field">
+        <label>Text Color</label>
+        <input type="color" id="colorFg" value="#e6e8ee">
+      </div>
+      <div class="field">
+        <label>Accent Color</label>
+        <input type="color" id="colorAccent" value="#8b5cf6">
+      </div>
+      <div class="grid">
+        <div class="field">
+          <label>Border Radius</label>
+          <input type="range" id="radius" min="0" max="20" value="10">
+        </div>
+        <div class="field">
+          <label>Shadow</label>
+          <select id="shadow">
+            <option value="none">None</option>
+            <option value="sm" selected>Small</option>
+            <option value="md">Medium</option>
+            <option value="lg">Large</option>
+          </select>
+        </div>
+      </div>
+      <button id="applyTheme">Apply Theme</button>
+
+      <h2>📦 Presets</h2>
+      <div class="field">
+        <select id="presetSelect">
+          <option value="default">Default</option>
+          <option value="minimal">Minimal</option>
+          <option value="vibrant">Vibrant</option>
+        </select>
+        <button id="loadPreset">Load Preset</button>
+      </div>
+
+      <h2>🧩 Sections</h2>
+      <div class="field">
+        <label><input type="checkbox" class="sectionToggle" data-id="hero" checked> Hero</label>
+        <label><input type="checkbox" class="sectionToggle" data-id="features" checked> Features</label>
+        <label><input type="checkbox" class="sectionToggle" data-id="pricing"> Pricing</label>
+        <label><input type="checkbox" class="sectionToggle" data-id="faq"> FAQ</label>
+        <label><input type="checkbox" class="sectionToggle" data-id="footer" checked> Footer</label>
+      </div>
+
+      <h2>📥 Export</h2>
+      <button id="exportDesign" class="export-primary">Export Current Design</button>
+      <button id="downloadTheme">Download Theme</button>
+      <button id="copyHTML">Copy HTML</button>
     </div>
 
-    <div class="hero">
-      <h2>Make cohesive, aesthetic UIs in minutes.</h2>
-      <p>Start from a great preset, tweak tokens, assemble sections, export. All in your browser as a PWA.</p>
-      <div class="cta">
-        <a class="btn primary" href="./apps/web/">Open the App</a>
-        <button class="btn" id="installBtn" hidden>Install PWA</button>
-        <a class="btn" href="https://github.com/dtslib1979/scenestealer-engine" target="_blank" rel="noreferrer">GitHub</a>
-      </div>
-      <div class="features">
-        <div class="chip">🎨 Theme tokens</div>
-        <div class="chip">🧩 Reusable sections</div>
-        <div class="chip">✨ Pro finish options</div>
-        <div class="chip">📦 Export & Pages deploy</div>
-      </div>
+    <div class="preview" id="preview">
+      <!-- Generated content will appear here -->
     </div>
+  </div>
 
-    <div class="foot">
-      <span>Tip: press <span class="kbd">Alt</span> + <span class="kbd">Click</span> to open in new tab.</span>
-      <span>© Scenestealer</span>
-    </div>
-  </section>
-</div>
+  <div class="footnote">
+    Built with vanilla JS. No build step required. Fork, edit, and deploy with GitHub Pages.
+  </div>
 
 <script>
-  // Register service worker for PWA functionality
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('./apps/web/sw.js', { scope: './apps/web/' }).then(registration => {
-      console.log('Service Worker registered:', registration)
-    }).catch(error => {
-      console.log('Service Worker registration failed:', error)
-    })
+// SceneStealer Engine - Self-contained static app
+const $ = (q) => document.querySelector(q)
+const $$ = (q) => Array.from(document.querySelectorAll(q))
+
+const state = {
+  tokens: {
+    colors: { primary: '#4c8bf5', bg: '#0f1115', fg: '#e6e8ee', accent: '#8b5cf6' },
+    radii: 10,
+    shadow: 'sm'
+  },
+  sections: { hero: true, features: true, pricing: false, faq: false, footer: true }
+}
+
+const SHADOWS = {
+  none: 'none',
+  sm: '0 1px 2px rgba(0,0,0,.25)',
+  md: '0 4px 12px rgba(0,0,0,.25)',
+  lg: '0 10px 30px rgba(0,0,0,.35)'
+}
+
+const PRESETS = {
+  default: {
+    colors: { primary: '#4c8bf5', bg: '#0f1115', fg: '#e6e8ee', accent: '#8b5cf6' },
+    radii: 10,
+    shadow: 'sm'
+  },
+  minimal: {
+    colors: { primary: '#6b7280', bg: '#f9fafb', fg: '#111827', accent: '#4b5563' },
+    radii: 4,
+    shadow: 'none'
+  },
+  vibrant: {
+    colors: { primary: '#f59e0b', bg: '#1e1b4b', fg: '#fbbf24', accent: '#f97316' },
+    radii: 16,
+    shadow: 'lg'
+  }
+}
+
+// LocalStorage persistence
+function saveState() {
+  try {
+    localStorage.setItem('scenestealer-tokens', JSON.stringify(state.tokens))
+    localStorage.setItem('scenestealer-sections', JSON.stringify(state.sections))
+  } catch (e) { console.warn('Could not save to localStorage:', e) }
+}
+
+function loadState() {
+  try {
+    const savedTokens = localStorage.getItem('scenestealer-tokens')
+    const savedSections = localStorage.getItem('scenestealer-sections')
+    if (savedTokens) state.tokens = { ...state.tokens, ...JSON.parse(savedTokens) }
+    if (savedSections) state.sections = { ...state.sections, ...JSON.parse(savedSections) }
+  } catch (e) { console.warn('Could not load from localStorage:', e) }
+}
+
+function applyTokens() {
+  const r = document.documentElement
+  r.style.setProperty('--color-primary', state.tokens.colors.primary)
+  r.style.setProperty('--color-bg', state.tokens.colors.bg)
+  r.style.setProperty('--color-fg', state.tokens.colors.fg)
+  r.style.setProperty('--color-accent', state.tokens.colors.accent)
+  r.style.setProperty('--radius', state.tokens.radii + 'px')
+  r.style.setProperty('--shadow', SHADOWS[state.tokens.shadow] || SHADOWS.sm)
+  saveState()
+  render()
+}
+
+function render() {
+  const v = $('#preview')
+  v.innerHTML = ''
+
+  if (state.sections.hero) v.appendChild(hero())
+  if (state.sections.features) v.appendChild(features())
+  if (state.sections.pricing) v.appendChild(pricing())
+  if (state.sections.faq) v.appendChild(faq())
+  if (state.sections.footer) v.appendChild(footer())
+}
+
+function section(className) {
+  const el = document.createElement('div')
+  el.className = `section ${className}`
+  return el
+}
+
+function hero() {
+  const el = section('hero')
+  el.innerHTML = `
+    <h3>Aesthetic UI, faster.</h3>
+    <p>Start from a great preset, tweak tokens, assemble sections, ship with pro finish.</p>
+    <div class="cta">
+      <button class="btn primary">Get Started</button>
+      <button class="btn">Docs</button>
+    </div>
+  `
+  return el
+}
+
+function features() {
+  const el = section('features')
+  el.innerHTML = `
+    <h3>Features</h3>
+    <div class="grid-layout">
+      ${['Theme tokens', 'Reusable components', 'Pro finish', 'Export/Pages'].map(t => `
+        <div class="card">
+          <strong>${t}</strong>
+          <p style="margin:6px 0 0 0">Cohesive styling from a single source of truth.</p>
+        </div>`).join('')}
+    </div>`
+  return el
+}
+
+function pricing() {
+  const el = section('pricing')
+  el.innerHTML = `
+    <h3>Pricing</h3>
+    <div class="tiers">
+      <div class="tier"><div class="name">Free</div><div class="price">$0/mo</div><button class="btn">Start Free</button></div>
+      <div class="tier"><div class="name">Pro</div><div class="price">$19/mo</div><button class="btn primary">Choose Pro</button></div>
+      <div class="tier"><div class="name">Team</div><div class="price">$29/mo</div><button class="btn primary">Choose Team</button></div>
+    </div>
+  `
+  return el
+}
+
+function faq() {
+  const el = section('faq')
+  el.innerHTML = `
+    <h3>FAQ</h3>
+    <details><summary>Is this legal?</summary><p>We use style tokens, not copying logos/assets.</p></details>
+    <details><summary>Mobile friendly?</summary><p>Yes, preview and edits work on mobile.</p></details>
+    <details><summary>Export?</summary><p>Copy HTML or download theme JSON now; ZIP/PR later.</p></details>
+  `
+  return el
+}
+
+function footer() {
+  const el = section('footer')
+  el.innerHTML = `
+    <div class="footer-section">
+      <span>© Scenestealer Engine</span>
+      <a href="https://github.com" target="_blank" rel="noreferrer">GitHub</a>
+    </div>
+  `
+  return el
+}
+
+function initializeUI() {
+  // Load saved state
+  loadState()
+  
+  // Set UI values from state
+  $('#colorPrimary').value = state.tokens.colors.primary
+  $('#colorBg').value = state.tokens.colors.bg
+  $('#colorFg').value = state.tokens.colors.fg
+  $('#colorAccent').value = state.tokens.colors.accent
+  $('#radius').value = state.tokens.radii
+  $('#shadow').value = state.tokens.shadow
+  
+  // Set section toggles
+  $$('.sectionToggle').forEach(cb => {
+    const id = cb.dataset.id
+    cb.checked = state.sections[id]
+  })
+}
+
+// Export functionality
+function getShadowValue(shadowKey) {
+  return SHADOWS[shadowKey] || SHADOWS.sm
+}
+
+function generateCompleteHTML(tokens, sections) {
+  const cssVariables = `
+  :root {
+    --color-primary: ${tokens.colors.primary};
+    --color-bg: ${tokens.colors.bg};
+    --color-fg: ${tokens.colors.fg};
+    --color-accent: ${tokens.colors.accent};
+    --radius: ${tokens.radii}px;
+    --shadow: ${getShadowValue(tokens.shadow)};
+    --font-body: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Noto Sans, Helvetica, Arial;
+  }`.trim();
+
+  const baseStyles = `
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; }
+  body {
+    background: var(--color-bg);
+    color: var(--color-fg);
+    font-family: var(--font-body);
+    line-height: 1.6;
+    padding: 20px;
+  }
+  .container { max-width: 1200px; margin: 0 auto; }
+  .section {
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-bottom: 14px;
+    background: rgba(255,255,255,0.03);
+    box-shadow: var(--shadow);
+  }
+  .section h3 { margin: 0 0 8px 0; color: var(--color-fg); }
+  .hero {
+    padding: 40px;
+    text-align: center;
+    background: linear-gradient(135deg, rgba(76,139,245,0.1), rgba(139,92,246,0.1));
+  }
+  .cta { display: flex; gap: 10px; justify-content: center; margin-top: 14px; }
+  .btn {
+    background: var(--color-primary);
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: var(--radius);
+    cursor: pointer;
+    font-weight: 600;
+    transition: opacity 0.2s;
+  }
+  .btn:hover { opacity: 0.9; }
+  .grid-layout { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; }
+  .card {
+    background: rgba(255,255,255,0.05);
+    padding: 20px;
+    border-radius: var(--radius);
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+  .tiers { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+  .tier {
+    background: rgba(255,255,255,0.05);
+    padding: 24px;
+    border-radius: var(--radius);
+    border: 1px solid rgba(255,255,255,0.1);
+    text-align: center;
+  }
+  .tier .price { font-size: 32px; font-weight: bold; color: var(--color-primary); margin: 12px 0; }
+  details {
+    background: rgba(255,255,255,0.05);
+    padding: 12px;
+    margin-bottom: 8px;
+    border-radius: var(--radius);
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+  .footer-section { display: flex; justify-content: space-between; align-items: center; }
+  `.trim();
+
+  let sectionsHTML = '';
+  
+  if (sections.hero) {
+    sectionsHTML += `
+    <section class="section hero">
+      <h3>Aesthetic UI, faster.</h3>
+      <p>Start from a great preset, tweak tokens, assemble sections, ship with pro finish.</p>
+      <div class="cta">
+        <button class="btn">Get Started</button>
+        <button class="btn">Docs</button>
+      </div>
+    </section>`;
   }
 
-  // Minimal PWA install affordance if supported
-  let deferred;
-  window.addEventListener('beforeinstallprompt', (e)=>{
-    e.preventDefault(); deferred = e;
-    const btn = document.getElementById('installBtn');
-    btn.hidden = false;
-    btn.onclick = async ()=>{
-      btn.disabled = true;
-      deferred.prompt(); await deferred.userChoice; deferred = null;
-    };
-  });
+  if (sections.features) {
+    sectionsHTML += `
+    <section class="section features">
+      <h3>Features</h3>
+      <div class="grid-layout">
+        <div class="card"><strong>Theme tokens</strong><p>Cohesive styling from a single source of truth.</p></div>
+        <div class="card"><strong>Reusable components</strong><p>Cohesive styling from a single source of truth.</p></div>
+        <div class="card"><strong>Pro finish</strong><p>Cohesive styling from a single source of truth.</p></div>
+        <div class="card"><strong>Export/Pages</strong><p>Cohesive styling from a single source of truth.</p></div>
+      </div>
+    </section>`;
+  }
 
-  // Add smooth interactions
-  document.querySelectorAll('.btn').forEach(btn => {
-    btn.addEventListener('mouseenter', () => {
-      btn.style.transform = 'translateY(-2px)';
-    });
-    btn.addEventListener('mouseleave', () => {
-      btn.style.transform = 'translateY(0)';
-    });
-  });
+  if (sections.pricing) {
+    sectionsHTML += `
+    <section class="section pricing">
+      <h3>Pricing</h3>
+      <div class="tiers">
+        <div class="tier"><div class="name">Free</div><div class="price">$0/mo</div><button class="btn">Start Free</button></div>
+        <div class="tier"><div class="name">Pro</div><div class="price">$19/mo</div><button class="btn">Choose Pro</button></div>
+        <div class="tier"><div class="name">Team</div><div class="price">$29/mo</div><button class="btn">Choose Team</button></div>
+      </div>
+    </section>`;
+  }
+
+  if (sections.faq) {
+    sectionsHTML += `
+    <section class="section faq">
+      <h3>FAQ</h3>
+      <details><summary>Is this legal?</summary><p>We use style tokens, not copying logos/assets.</p></details>
+      <details><summary>Mobile friendly?</summary><p>Yes, preview and edits work on mobile.</p></details>
+      <details><summary>Export?</summary><p>Copy HTML or download theme JSON now; ZIP/PR later.</p></details>
+    </section>`;
+  }
+
+  if (sections.footer) {
+    sectionsHTML += `
+    <section class="section footer">
+      <div class="footer-section">
+        <span>© Scenestealer Engine</span>
+        <a href="https://github.com" target="_blank" rel="noreferrer">GitHub</a>
+      </div>
+    </section>`;
+  }
+
+  return `<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Exported Design - Scenestealer Engine</title>
+  <style>
+${cssVariables}
+
+${baseStyles}
+  </style>
+</head>
+<body>
+  <div class="container">
+${sectionsHTML}
+  </div>
+</body>
+</html>`;
+}
+
+// Event Listeners
+$('#applyTheme').addEventListener('click', () => {
+  state.tokens.colors.primary = $('#colorPrimary').value
+  state.tokens.colors.bg = $('#colorBg').value
+  state.tokens.colors.fg = $('#colorFg').value
+  state.tokens.colors.accent = $('#colorAccent').value
+  state.tokens.radii = +$('#radius').value
+  state.tokens.shadow = $('#shadow').value
+  applyTokens()
+})
+
+$$('.sectionToggle').forEach(cb => {
+  cb.addEventListener('change', e => {
+    const id = e.target.dataset.id
+    state.sections[id] = e.target.checked
+    saveState()
+    render()
+  })
+})
+
+$('#loadPreset').addEventListener('click', () => {
+  const presetName = $('#presetSelect').value
+  const preset = PRESETS[presetName]
+  if (preset) {
+    state.tokens = { ...preset }
+    // Update UI controls with new values
+    $('#colorPrimary').value = state.tokens.colors.primary
+    $('#colorBg').value = state.tokens.colors.bg
+    $('#colorFg').value = state.tokens.colors.fg
+    $('#colorAccent').value = state.tokens.colors.accent
+    $('#radius').value = state.tokens.radii
+    $('#shadow').value = state.tokens.shadow
+    applyTokens()
+  }
+})
+
+$('#toggleDark').addEventListener('change', e => {
+  if (e.target.checked) {
+    state.tokens.colors.bg = '#0a0c10'
+    state.tokens.colors.fg = '#ffffff'
+  } else {
+    state.tokens.colors.bg = $('#colorBg').value
+    state.tokens.colors.fg = $('#colorFg').value
+  }
+  applyTokens()
+})
+
+$('#toggleBaseline').addEventListener('change', e => {
+  document.body.classList.toggle('baseline', e.target.checked)
+})
+
+$('#toggleHiContrast').addEventListener('change', e => {
+  document.body.classList.toggle('high-contrast', e.target.checked)
+})
+
+$('#toggleReduceMotion').addEventListener('change', e => {
+  document.body.classList.toggle('reduce-motion', e.target.checked)
+})
+
+$('#downloadTheme').addEventListener('click', () => {
+  const blob = new Blob([JSON.stringify({ tokens: state.tokens }, null, 2)], { type: 'application/json' })
+  const a = document.createElement('a')
+  a.href = URL.createObjectURL(blob)
+  a.download = 'theme.json'
+  a.click()
+  URL.revokeObjectURL(a.href)
+})
+
+$('#exportDesign').addEventListener('click', () => {
+  const html = generateCompleteHTML(state.tokens, state.sections)
+  const blob = new Blob([html], { type: 'text/html' })
+  const a = document.createElement('a')
+  a.href = URL.createObjectURL(blob)
+  a.download = 'scenestealer-export.html'
+  a.click()
+  URL.revokeObjectURL(a.href)
+})
+
+$('#copyHTML').addEventListener('click', () => {
+  const html = generateCompleteHTML(state.tokens, state.sections)
+  navigator.clipboard.writeText(html).then(() => alert('HTML copied to clipboard!'))
+})
+
+// Initialize app
+initializeUI()
+applyTokens()
+render()
 </script>
 </body>
 </html>
