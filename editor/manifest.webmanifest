@@ -1,0 +1,26 @@
+{
+  "name": "Scenestealer Engine",
+  "short_name": "Scenestealer",
+  "description": "Extract the vibe, assemble the site, finish like a pro. Build aesthetic UIs fast.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#0f1115",
+  "theme_color": "#4c8bf5",
+  "categories": ["design", "productivity", "utilities"],
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><circle cx='96' cy='96' r='88' fill='%234c8bf5'/><path d='M54 120c24 12 60 12 84 0-6 18-24 30-42 30s-36-12-42-30Z' fill='white'/><circle cx='78' cy='78' r='12' fill='white'/><circle cx='114' cy='78' r='12' fill='white'/></svg>",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><circle cx='256' cy='256' r='240' fill='%234c8bf5'/><path d='M144 320c64 32 160 32 224 0-16 48-64 80-112 80s-96-32-112-80Z' fill='white'/><circle cx='208' cy='208' r='32' fill='white'/><circle cx='304' cy='208' r='32' fill='white'/></svg>",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

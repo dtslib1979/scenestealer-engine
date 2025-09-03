@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Scenestealer Engine - Design Tool</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="manifest" href="manifest.webmanifest">
+</head>
+<body>
+  <div class="topbar">
+    <h1>Scenestealer Engine <span class="badge">Alpha</span></h1>
+    <div class="toggles">
+      <label><input type="checkbox" id="toggleDark"> Dark</label>
+      <label><input type="checkbox" id="toggleHiContrast"> High Contrast</label>
+      <label><input type="checkbox" id="toggleBaseline"> Baseline</label>
+      <label><input type="checkbox" id="toggleReduceMotion"> Reduce Motion</label>
+      <span>PWA: <span id="pwaStatus">no</span></span>
+    </div>
+  </div>
+
+  <div class="layout">
+    <div class="panel">
+      <h2>🎨 Theme Tokens</h2>
+      <div class="field">
+        <label>Primary Color</label>
+        <input type="color" id="colorPrimary" value="#4c8bf5">
+      </div>
+      <div class="field">
+        <label>Background</label>
+        <input type="color" id="colorBg" value="#0f1115">
+      </div>
+      <div class="field">
+        <label>Text Color</label>
+        <input type="color" id="colorFg" value="#e6e8ee">
+      </div>
+      <div class="field">
+        <label>Accent Color</label>
+        <input type="color" id="colorAccent" value="#8b5cf6">
+      </div>
+      <div class="grid">
+        <div class="field">
+          <label>Border Radius</label>
+          <input type="range" id="radius" min="0" max="20" value="10">
+        </div>
+        <div class="field">
+          <label>Shadow</label>
+          <select id="shadow">
+            <option value="none">None</option>
+            <option value="sm" selected>Small</option>
+            <option value="md">Medium</option>
+            <option value="lg">Large</option>
+          </select>
+        </div>
+      </div>
+      <button id="applyTheme">Apply Theme</button>
+
+      <h2>📦 Presets</h2>
+      <div class="field">
+        <select id="presetSelect">
+          <option value="default">Default</option>
+          <option value="minimal">Minimal</option>
+          <option value="vibrant">Vibrant</option>
+        </select>
+        <button id="loadPreset">Load Preset</button>
+      </div>
+
+      <h2>🧩 Sections</h2>
+      <div class="field">
+        <label><input type="checkbox" class="sectionToggle" data-id="hero" checked> Hero</label>
+        <label><input type="checkbox" class="sectionToggle" data-id="features" checked> Features</label>
+        <label><input type="checkbox" class="sectionToggle" data-id="pricing"> Pricing</label>
+        <label><input type="checkbox" class="sectionToggle" data-id="faq"> FAQ</label>
+        <label><input type="checkbox" class="sectionToggle" data-id="footer" checked> Footer</label>
+      </div>
+
+      <h2>📥 Export</h2>
+      <button id="exportDesign" class="export-primary">Export Current Design</button>
+      <button id="downloadTheme">Download Theme</button>
+      <button id="copyHTML">Copy HTML</button>
+    </div>
+
+    <div class="preview" id="preview">
+      <!-- Generated content will appear here -->
+    </div>
+  </div>
+
+  <div class="footnote">
+    Built with vanilla JS. No build step required.
+  </div>
+
+  <script src="export.js"></script>
+  <script src="app.js"></script>
+  <script>
+    // Register service worker
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./sw.js').then(registration => {
+        console.log('Service Worker registered:', registration)
+      }).catch(error => {
+        console.log('Service Worker registration failed:', error)
+      })
+    }
+  </script>
+</body>
+</html>

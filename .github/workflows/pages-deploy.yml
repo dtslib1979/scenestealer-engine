@@ -1,7 +1,9 @@
-name: Deploy Pages
+name: Deploy Pages (Legacy)
 on:
   push:
     branches: [ main ]
+    paths-ignore:
+      - "samples/**"  # Archive workflow handles sample changes
   workflow_dispatch:
 permissions:
   contents: read
@@ -18,8 +20,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Setup Web Directory
+        run: |
+          # Use web/ directory if it exists, otherwise use root
+          if [ -d "web" ]; then
+            echo "Using web/ directory for deployment"
+          else
+            echo "Using root directory for deployment"
+            mkdir -p web
+            cp index.html web/
+          fi
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: '.'
+          path: './web'
       - id: deployment
         uses: actions/deploy-pages@v4

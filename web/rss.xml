@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>SceneStealer Archive - Design Samples</title>
+    <link>https://dtslib1979.github.io/scenestealer-engine</link>
+    <description>Latest design samples and templates from SceneStealer Engine</description>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 03 Sep 2025 00:18:43 </lastBuildDate>
+    <atom:link href="https://dtslib1979.github.io/scenestealer-engine/rss.xml" rel="self" type="application/rss+xml" />
+    <generator>SceneStealer Engine Archive Generator</generator>
+    <image>
+      <url>https://dtslib1979.github.io/scenestealer-engine/favicon.ico</url>
+      <title>SceneStealer Archive</title>
+      <link>https://dtslib1979.github.io/scenestealer-engine</link>
+    </image>
+
+    <item>
+      <title>Dark Theme Sample - Scenestealer Engine</title>
+      <link>https://dtslib1979.github.io/scenestealer-engine/samples/sample-2-dark.html</link>
+      <guid>https://dtslib1979.github.io/scenestealer-engine/samples/sample-2-dark.html</guid>
+      <description>Sleek dark design with vibrant accent colors and strong contrast.</description>
+      <pubDate>Wed, 03 Sep 2025 00:13:45 </pubDate>
+      <category>Design Sample</category>
+      <category>SceneStealer</category>
+      <enclosure url="https://dtslib1979.github.io/scenestealer-engine/samples/sample-2-dark.html" type="text/html" length="2822"/>
+    </item>
+    <item>
+      <title>Minimal Design Sample - Scenestealer Engine</title>
+      <link>https://dtslib1979.github.io/scenestealer-engine/samples/sample-1-minimal.html</link>
+      <guid>https://dtslib1979.github.io/scenestealer-engine/samples/sample-1-minimal.html</guid>
+      <description>Clean, simple, and professional design with subtle shadows and modern typography.</description>
+      <pubDate>Wed, 03 Sep 2025 00:13:29 </pubDate>
+      <category>Design Sample</category>
+      <category>SceneStealer</category>
+      <enclosure url="https://dtslib1979.github.io/scenestealer-engine/samples/sample-1-minimal.html" type="text/html" length="2322"/>
+    </item>
+  </channel>
+</rss>

@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Scenestealer Engine</title>
+<meta name="description" content="Preset → tokens → sections → pro finish → export. Build aesthetic UIs fast." />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><circle cx='32' cy='32' r='30' fill='%234c8bf5'/><path d='M18 40c8 4 20 4 28 0-2 6-8 10-14 10s-12-4-14-10Z' fill='white'/><circle cx='26' cy='26' r='4' fill='white'/><circle cx='38' cy='26' r='4' fill='white'/></svg>">
+<link rel="manifest" href="./apps/web/manifest.webmanifest">
+<meta property="og:title" content="Scenestealer Engine" />
+<meta property="og:description" content="Extract the vibe. Assemble the site. Finish like a pro." />
+<meta property="og:type" content="website" />
+<style>
+  :root{
+    --bg:#0b0f16; --ink:#e7ecf5; --muted:#94a3b8; --primary:#4c8bf5; --accent:#8b5cf6;
+    --card:#0f1520; --border:#1f2734; --radius:12px; --glow: 0 10px 40px rgba(76,139,245,.25);
+    --shadow: 0 4px 12px rgba(0,0,0,.25);
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0; font: 15px/1.6 ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+    color:var(--ink);
+    background:
+      radial-gradient(1200px 600px at 10% -10%, rgba(76,139,245,.20), transparent 60%),
+      radial-gradient(900px 500px at 110% 10%, rgba(139,92,246,.18), transparent 60%),
+      linear-gradient(180deg, #0a0e14, #0b0f16);
+  }
+  .wrap{
+    min-height:100%;
+    display:grid; place-items:center; padding:28px;
+  }
+  .card{
+    width:min(820px, 94vw);
+    background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.00)) , var(--card);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    box-shadow: var(--glow);
+    overflow:hidden;
+  }
+  .top{
+    padding:28px 28px 0 28px;
+    display:flex; align-items:center; gap:12px;
+  }
+  .logo{
+    width:36px;height:36px;border-radius:10px;
+    background: radial-gradient(60% 60% at 30% 20%, rgba(76,139,245,.6), rgba(139,92,246,.6));
+    display:grid;place-items:center;color:#fff;font-weight:900;
+  }
+  .brand h1{margin:0;font-size:18px}
+  .brand p{margin:2px 0 0 0;color:var(--muted);font-size:13px}
+
+  .hero{
+    padding:24px 28px 32px 28px;
+    display:grid; gap:10px;
+  }
+  .hero h2{margin:6px 0 0 0;font-size:28px;letter-spacing:.2px}
+  .hero p{margin:0;color:var(--muted)}
+  .cta{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+  .btn{
+    appearance:none;border:1px solid var(--border);background:#0d1420;color:var(--ink);text-decoration:none;
+    padding:12px 20px;border-radius:var(--radius);font-weight:600;cursor:pointer;display:inline-block;
+    transition: all 0.2s ease;box-shadow:var(--shadow);
+  }
+  .btn.primary{background:var(--primary);border-color:transparent;color:#fff;box-shadow:var(--glow)}
+  .btn:hover{opacity:.95;transform:translateY(-1px);box-shadow: 0 6px 20px rgba(0,0,0,.3)}
+  .features{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-top:10px}
+  .chip{
+    border:1px solid var(--border);border-radius:12px;padding:10px 12px;background:#0b1220;color:var(--muted);
+  }
+  .foot{
+    display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--border);
+    padding:12px 16px;color:var(--muted);font-size:12px;background:rgba(255,255,255,.01)
+  }
+  .kbd{border:1px solid var(--border);padding:2px 6px;border-radius:8px;background:#0c1320;color:#cbd5e1;font-size:12px}
+  @media (max-width:640px){ .hero h2{font-size:22px} }
+
+  .latest-sample{
+    background:var(--card); padding:24px; border-radius:var(--radius);
+    box-shadow:var(--shadow); border:1px solid var(--border);
+    margin:24px 0; text-align:center;
+  }
+  .sample-badge{
+    display:inline-block; padding:4px 12px; background:var(--accent);
+    color:white; border-radius:16px; font-size:12px; font-weight:500;
+    margin-bottom:16px;
+  }
+  .latest-sample h3{margin:0 0 12px; color:var(--ink)}
+  .latest-sample p{color:var(--muted); margin:0 0 16px}
+  .sample-actions{display:flex; gap:12px; justify-content:center; flex-wrap:wrap}
+  .sample-date{color:var(--muted); font-size:12px; margin-top:16px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <section class="card">
+    <div class="top">
+      <div class="logo">SE</div>
+      <div class="brand">
+        <h1>Scenestealer Engine</h1>
+        <p>Extract the vibe · Assemble the site · Finish like a pro</p>
+      </div>
+    </div>
+
+    <div class="hero">
+      <h2>Make cohesive, aesthetic UIs in minutes.</h2>
+      <p>Start from a great preset, tweak tokens, assemble sections, export. All in your browser as a PWA.</p>
+      
+      <div class="latest-sample">
+        <div class="sample-badge">🆕 Latest Sample</div>
+        <h3>Dark Theme Sample</h3>
+        <p>Sleek dark design with vibrant accent colors and strong contrast.</p>
+        <div class="sample-actions">
+          <a href="samples/sample-2-dark.html" target="_blank" class="btn">Preview</a>
+          <a href="editor/?sample=sample-2-dark.html" class="btn secondary">Edit</a>
+          <a href="archive.html" class="btn secondary">View All</a>
+        </div>
+        <div class="sample-date">Updated September 03, 2025</div>
+      </div>
+      
+      <div class="latest-sample">
+        <div class="sample-badge">🆕 Latest Sample</div>
+        <h3>Dark Theme Sample</h3>
+        <p>Sleek dark design with vibrant accent colors and strong contrast.</p>
+        <div class="sample-actions">
+          <a href="samples/sample-2-dark.html" target="_blank" class="btn">Preview</a>
+          <a href="editor/?sample=sample-2-dark.html" class="btn secondary">Edit</a>
+          <a href="archive.html" class="btn secondary">View All</a>
+        </div>
+        <div class="sample-date">Updated September 03, 2025</div>
+      </div>
+      <div class="cta">
+        <a class="btn primary" href="./apps/web/">Open the App</a>
+        <button class="btn" id="installBtn" hidden>Install PWA</button>
+        <a class="btn" href="https://github.com/dtslib1979/scenestealer-engine" target="_blank" rel="noreferrer">GitHub</a>
+      </div>
+      <div class="features">
+        <div class="chip">🎨 Theme tokens</div>
+        <div class="chip">🧩 Reusable sections</div>
+        <div class="chip">✨ Pro finish options</div>
+        <div class="chip">📦 Export & Pages deploy</div>
+      </div>
+    </div>
+
+    <div class="foot">
+      <span>Tip: press <span class="kbd">Alt</span> + <span class="kbd">Click</span> to open in new tab.</span>
+      <span>© Scenestealer</span>
+    </div>
+  </section>
+</div>
+
+<script>
+  // Register service worker for PWA functionality
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./apps/web/sw.js', { scope: './apps/web/' }).then(registration => {
+      console.log('Service Worker registered:', registration)
+    }).catch(error => {
+      console.log('Service Worker registration failed:', error)
+    })
+  }
+
+  // Minimal PWA install affordance if supported
+  let deferred;
+  window.addEventListener('beforeinstallprompt', (e)=>{
+    e.preventDefault(); deferred = e;
+    const btn = document.getElementById('installBtn');
+    btn.hidden = false;
+    btn.onclick = async ()=>{
+      btn.disabled = true;
+      deferred.prompt(); await deferred.userChoice; deferred = null;
+    };
+  });
+
+  // Add smooth interactions
+  document.querySelectorAll('.btn').forEach(btn => {
+    btn.addEventListener('mouseenter', () => {
+      btn.style.transform = 'translateY(-2px)';
+    });
+    btn.addEventListener('mouseleave', () => {
+      btn.style.transform = 'translateY(0)';
+    });
+  });
+</script>
+</body>
+</html>

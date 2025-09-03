@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dark Theme Sample - Scenestealer Engine</title>
+  <style>
+    :root{
+      --bg:#0f1419; --ink:#e6e8ee; --muted:#94a3b8; --primary:#00d4aa; --accent:#ff6b6b;
+      --card:#1a202c; --border:#2d3748; --radius:12px; --shadow: 0 4px 12px rgba(0,0,0,.4);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; font: 15px/1.6 ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+      color:var(--ink); background:var(--bg);
+    }
+    .container{max-width:1200px; margin:0 auto; padding:0 20px}
+    .section{padding:60px 0}
+    .hero{text-align:center}
+    .hero h1{font-size:48px; margin:0 0 16px; color:var(--ink)}
+    .hero p{font-size:20px; color:var(--muted); margin:0 0 32px}
+    .btn{
+      display:inline-block; padding:12px 24px; background:var(--primary); 
+      color:var(--bg); text-decoration:none; border-radius:var(--radius);
+      border:none; cursor:pointer; font-weight:500;
+    }
+    .btn:hover{background:#00c29a}
+    .btn.secondary{background:transparent; border:2px solid var(--accent); color:var(--accent)}
+    .btn.secondary:hover{background:var(--accent); color:var(--bg)}
+    .card{
+      background:var(--card); padding:24px; border-radius:var(--radius);
+      box-shadow:var(--shadow); border:1px solid var(--border);
+    }
+    .grid{display:grid; grid-template-columns:repeat(auto-fit, minmax(300px, 1fr)); gap:24px}
+    .pricing{margin:60px 0}
+    .pricing h2{text-align:center; margin-bottom:40px; color:var(--primary)}
+    .tier{text-align:center; padding:40px 24px}
+    .tier .name{font-size:24px; margin-bottom:8px; color:var(--accent)}
+    .tier .price{font-size:36px; font-weight:bold; margin-bottom:24px}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <section class="section hero">
+      <h1>Dark Theme Sample</h1>
+      <p>Sleek dark design with vibrant accent colors and strong contrast.</p>
+      <button class="btn">Start Building</button>
+      <button class="btn secondary">Learn More</button>
+    </section>
+
+    <section class="section pricing">
+      <h2>Choose Your Plan</h2>
+      <div class="grid">
+        <div class="card tier">
+          <div class="name">Starter</div>
+          <div class="price">$0/mo</div>
+          <button class="btn">Get Started</button>
+        </div>
+        <div class="card tier">
+          <div class="name">Pro</div>
+          <div class="price">$19/mo</div>
+          <button class="btn">Choose Pro</button>
+        </div>
+        <div class="card tier">
+          <div class="name">Enterprise</div>
+          <div class="price">$99/mo</div>
+          <button class="btn">Contact Sales</button>
+        </div>
+      </div>
+    </section>
+  </div>
+</body>
+</html>

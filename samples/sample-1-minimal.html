@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Minimal Design Sample - Scenestealer Engine</title>
+  <style>
+    :root{
+      --bg:#f8fafc; --ink:#1e293b; --muted:#64748b; --primary:#3b82f6; --accent:#8b5cf6;
+      --card:#ffffff; --border:#e2e8f0; --radius:8px; --shadow: 0 1px 3px rgba(0,0,0,.1);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; font: 15px/1.6 ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+      color:var(--ink); background:var(--bg);
+    }
+    .container{max-width:1200px; margin:0 auto; padding:0 20px}
+    .section{padding:60px 0}
+    .hero{text-align:center}
+    .hero h1{font-size:48px; margin:0 0 16px; color:var(--ink)}
+    .hero p{font-size:20px; color:var(--muted); margin:0 0 32px}
+    .btn{
+      display:inline-block; padding:12px 24px; background:var(--primary); 
+      color:white; text-decoration:none; border-radius:var(--radius);
+      border:none; cursor:pointer; font-weight:500;
+    }
+    .btn:hover{background:#2563eb}
+    .card{
+      background:var(--card); padding:24px; border-radius:var(--radius);
+      box-shadow:var(--shadow); border:1px solid var(--border);
+    }
+    .grid{display:grid; grid-template-columns:repeat(auto-fit, minmax(300px, 1fr)); gap:24px}
+    .features{margin:60px 0}
+    .features h2{text-align:center; margin-bottom:40px}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <section class="section hero">
+      <h1>Minimal Design Sample</h1>
+      <p>Clean, simple, and professional design with subtle shadows and modern typography.</p>
+      <button class="btn">Get Started</button>
+    </section>
+
+    <section class="section features">
+      <h2>Key Features</h2>
+      <div class="grid">
+        <div class="card">
+          <h3>Clean Typography</h3>
+          <p>Modern font stack with perfect line height for readability.</p>
+        </div>
+        <div class="card">
+          <h3>Subtle Shadows</h3>
+          <p>Light shadows that add depth without overwhelming the design.</p>
+        </div>
+        <div class="card">
+          <h3>Responsive Grid</h3>
+          <p>Auto-fitting grid that works perfectly on all screen sizes.</p>
+        </div>
+      </div>
+    </section>
+  </div>
+</body>
+</html>
