@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Minimal Design - SceneStealer Engine</title>
+  <style>
+:root {
+  --color-primary: #6b7280;
+  --color-bg: #f9fafb;
+  --color-fg: #111827;
+  --color-accent: #4b5563;
+  --radius: 4px;
+  --shadow: none;
+  --font-body: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Noto Sans, Helvetica, Arial;
+  --font-heading: ui-serif, Georgia, Times;
+}
+
+* { box-sizing: border-box; }
+body { 
+  margin: 0; 
+  font-family: var(--font-body); 
+  background: var(--color-bg); 
+  color: var(--color-fg); 
+  line-height: 1.7; 
+}
+
+.container { 
+  max-width: 800px; 
+  margin: 0 auto; 
+  padding: 20px; 
+}
+
+.section { 
+  padding: 30px 0; 
+}
+
+.hero { 
+  text-align: center; 
+  padding: 60px 0; 
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.hero h1 { 
+  font-family: var(--font-heading);
+  font-size: 2.5rem; 
+  margin-bottom: 15px; 
+  color: var(--color-primary);
+  font-weight: 700;
+}
+
+.hero p { 
+  font-size: 1.1rem; 
+  opacity: 0.7; 
+  margin-bottom: 25px; 
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.btn {
+  display: inline-block;
+  padding: 10px 20px;
+  background: var(--color-primary);
+  color: white;
+  text-decoration: none;
+  border-radius: var(--radius);
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  margin: 3px;
+  transition: background-color 0.2s;
+}
+
+.btn:hover { background: var(--color-accent); }
+
+.content {
+  max-width: 600px;
+  margin: 40px auto;
+  text-align: left;
+}
+
+.content h2 {
+  font-family: var(--font-heading);
+  color: var(--color-primary);
+  margin-bottom: 15px;
+  font-size: 1.8rem;
+  font-weight: 600;
+}
+
+.content p {
+  margin-bottom: 15px;
+  color: var(--color-fg);
+}
+
+.footer {
+  text-align: center;
+  padding: 40px 0;
+  border-top: 1px solid #e5e7eb;
+  margin-top: 40px;
+  font-size: 0.9rem;
+  color: var(--color-accent);
+}
+
+.footer a {
+  color: var(--color-primary);
+  text-decoration: none;
+}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <section class="section hero">
+      <h1>Minimal Design</h1>
+      <p>Clean, simple, and focused. This minimal design sample demonstrates restraint and clarity in web design.</p>
+      <div class="cta">
+        <a href="#" class="btn">Read More</a>
+        <a href="#" class="btn">Contact</a>
+      </div>
+    </section>
+
+    <section class="section content">
+      <h2>Less is More</h2>
+      <p>This design embraces minimalism with clean typography, subtle colors, and generous white space. The focus is on content and readability rather than elaborate styling.</p>
+      
+      <h2>Typography First</h2>
+      <p>Using system fonts and serif headings creates a classic, readable hierarchy. The limited color palette keeps attention on the message.</p>
+
+      <h2>Purposeful Design</h2>
+      <p>Every element has a purpose. No unnecessary decoration or complexity - just clear communication and intuitive navigation.</p>
+    </section>
+
+    <section class="section footer">
+      <div class="footer">
+        Built with SceneStealer Engine • 
+        <a href="https://github.com/dtslib1979/scenestealer-engine" target="_blank" rel="noreferrer">View Source</a>
+      </div>
+    </section>
+  </div>
+</body>
+</html>
