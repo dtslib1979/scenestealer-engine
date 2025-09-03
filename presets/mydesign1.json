@@ -1,0 +1,12 @@
+{
+  "tokens": {
+    "colors": {
+      "primary": "#ff6b6b",
+      "bg": "#1a1a1a",
+      "fg": "#ffffff",
+      "accent": "#4ecdc4"
+    },
+    "radii": 8,
+    "shadow": "md"
+  }
+}

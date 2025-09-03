@@ -17,6 +17,50 @@ const SHADOWS = {
   lg: '0 10px 30px rgba(0,0,0,.35)'
 }
 
+// Function to extract theme tokens from HTML CSS variables
+function extractTokensFromHTML(html) {
+  const tokens = {
+    colors: { primary: '#4c8bf5', bg: '#0f1115', fg: '#e6e8ee', accent: '#8b5cf6' },
+    radii: 10,
+    shadow: 'sm'
+  }
+  
+  // Extract CSS variables from :root or style tags
+  const rootRegex = /:root\s*\{([^}]+)\}/g
+  const rootMatch = rootRegex.exec(html)
+  
+  if (rootMatch) {
+    const cssVars = rootMatch[1]
+    
+    // Parse CSS variables
+    const colorPrimary = cssVars.match(/--color-primary:\s*([^;]+);?/)
+    const colorBg = cssVars.match(/--color-bg:\s*([^;]+);?/)
+    const colorFg = cssVars.match(/--color-fg:\s*([^;]+);?/)
+    const colorAccent = cssVars.match(/--color-accent:\s*([^;]+);?/)
+    const radius = cssVars.match(/--radius:\s*([^;]+);?/)
+    const shadow = cssVars.match(/--shadow:\s*([^;]+);?/)
+    
+    if (colorPrimary) tokens.colors.primary = colorPrimary[1].trim()
+    if (colorBg) tokens.colors.bg = colorBg[1].trim()
+    if (colorFg) tokens.colors.fg = colorFg[1].trim()
+    if (colorAccent) tokens.colors.accent = colorAccent[1].trim()
+    if (radius) tokens.radii = parseInt(radius[1].replace('px', '').trim()) || 10
+    if (shadow) {
+      const shadowValue = shadow[1].trim()
+      // Try to match against known shadow values
+      for (const [key, val] of Object.entries(SHADOWS)) {
+        if (val === shadowValue) {
+          tokens.shadow = key
+          break
+        }
+      }
+      if (!tokens.shadow) tokens.shadow = 'sm' // fallback
+    }
+  }
+  
+  return tokens
+}
+
 // LocalStorage persistence functions
 function saveState() {
   try {
@@ -134,19 +178,57 @@ function section(cls){
 // UI wiring
 $('#loadPreset').addEventListener('click', async ()=>{
   const name = $('#presetSelect').value
-  const res = await fetch(`./presets/${name}.json`)
-  const json = await res.json()
-  state.tokens = json.tokens || state.tokens
   
-  // Update UI inputs to reflect loaded preset
-  $('#colorPrimary').value = state.tokens.colors.primary
-  $('#colorBg').value = state.tokens.colors.bg
-  $('#colorFg').value = state.tokens.colors.fg
-  $('#colorAccent').value = state.tokens.colors.accent
-  $('#radius').value = state.tokens.radii
-  $('#shadow').value = state.tokens.shadow
-  
-  applyTokens()
+  try {
+    let tokens = null
+    
+    // First try JSON file in root presets/
+    let res = await fetch(`../../presets/${name}.json`)
+    if (res.ok) {
+      const json = await res.json()
+      tokens = json.tokens || json
+      console.log('Loaded preset from root JSON:', name, tokens)
+    } else {
+      // If JSON fails, try HTML file in root presets/
+      res = await fetch(`../../presets/${name}.html`)
+      if (res.ok) {
+        const html = await res.text()
+        // Extract theme tokens from HTML CSS variables
+        tokens = extractTokensFromHTML(html)
+        console.log('Loaded preset from root HTML:', name, tokens)
+      } else {
+        // Fallback to built-in presets in ./presets/
+        res = await fetch(`./presets/${name}.json`)
+        if (res.ok) {
+          const json = await res.json()
+          tokens = json.tokens || json
+          console.log('Loaded preset from built-in:', name, tokens)
+        } else {
+          throw new Error('Preset not found')
+        }
+      }
+    }
+    
+    if (tokens) {
+      // Update state tokens
+      state.tokens = { ...state.tokens, ...tokens }
+      
+      // Update UI inputs to reflect loaded preset
+      $('#colorPrimary').value = state.tokens.colors.primary
+      $('#colorBg').value = state.tokens.colors.bg
+      $('#colorFg').value = state.tokens.colors.fg
+      $('#colorAccent').value = state.tokens.colors.accent
+      $('#radius').value = state.tokens.radii
+      $('#shadow').value = state.tokens.shadow
+      
+      // Apply the tokens to update the preview
+      applyTokens()
+      console.log('Successfully applied preset:', name)
+    }
+  } catch (error) {
+    console.error('Failed to load preset:', error)
+    alert(`Failed to load preset: ${name}`)
+  }
 })
 $('#applyTheme').addEventListener('click', ()=>{
   state.tokens.colors.primary = $('#colorPrimary').value

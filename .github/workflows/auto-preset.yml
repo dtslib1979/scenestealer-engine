@@ -1,0 +1,80 @@
+name: Auto Update Presets
+
+on:
+  push:
+    paths:
+      - "presets/**"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-presets:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Scan presets folder and update engine
+        run: |
+          echo "Scanning presets folder..."
+          
+          # Start with built-in presets
+          preset_options=""
+          
+          # Add built-in presets first
+          for file in apps/web/presets/*.json; do
+            if [ -f "$file" ]; then
+              filename=$(basename "$file")
+              name="${filename%.*}"
+              echo "Found built-in preset: $name"
+              preset_options="$preset_options          <option value=\"$name\">$name</option>\n"
+            fi
+          done
+          
+          # Add user presets from root presets/ folder
+          if [ -d "presets" ]; then
+            for file in presets/*; do
+              if [ -f "$file" ]; then
+                # Extract filename without path and extension
+                filename=$(basename "$file")
+                name="${filename%.*}"
+                extension="${filename##*.}"
+                
+                echo "Found user preset: $name (.$extension)"
+                preset_options="$preset_options          <option value=\"$name\">$name</option>\n"
+              fi
+            done
+          fi
+          
+          if [ -n "$preset_options" ]; then
+            echo "Updating preset options in index.html..."
+            
+            # Update the preset select options in apps/web/index.html
+            # Find the select element and replace its content
+            sed -i '/id="presetSelect"/,/<\/select>/c\
+        <select id="presetSelect">\
+'"$preset_options"'        </select>' apps/web/index.html
+            
+            echo "Updated preset options:"
+            echo -e "$preset_options"
+          else
+            echo "No preset files found"
+          fi
+
+      - name: Commit and push changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          
+          if git diff --quiet; then
+            echo "No changes to commit"
+          else
+            git add apps/web/index.html
+            git commit -m "auto: update presets from presets/ folder"
+            git push
+            echo "Changes committed and pushed"
+          fi
