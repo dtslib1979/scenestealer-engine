@@ -606,7 +606,13 @@ $('#loadPreset').addEventListener('click', () => {
   const preset = PRESETS[presetName]
   if (preset) {
     state.tokens = { ...preset }
-    initializeUI()
+    // Update UI controls with new values
+    $('#colorPrimary').value = state.tokens.colors.primary
+    $('#colorBg').value = state.tokens.colors.bg
+    $('#colorFg').value = state.tokens.colors.fg
+    $('#colorAccent').value = state.tokens.colors.accent
+    $('#radius').value = state.tokens.radii
+    $('#shadow').value = state.tokens.shadow
     applyTokens()
   }
 })
